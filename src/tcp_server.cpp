@@ -3,6 +3,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -10,6 +11,10 @@
 #ifndef MSG_NOSIGNAL
 #define MSG_NOSIGNAL 0
 #endif
+
+namespace {
+constexpr std::size_t kMaxClients = 4;
+}
 
 namespace ostkp {
 
@@ -84,7 +89,17 @@ void TcpServer::acceptLoop() {
         setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
 #endif
 
+        int flags = ::fcntl(client, F_GETFL, 0);
+        if (flags >= 0) {
+            ::fcntl(client, F_SETFL, flags | O_NONBLOCK);
+        }
+
         std::lock_guard<std::mutex> lock(clients_mutex_);
+        while (clients_.size() >= kMaxClients) {
+            ::close(clients_.front());
+            clients_.erase(clients_.begin());
+            log("oldest client disconnected");
+        }
         clients_.push_back(client);
         log("client connected");
     }
@@ -98,6 +113,7 @@ bool TcpServer::sendAll(int client, const std::string& payload) {
         ssize_t sent = ::send(client, data, remaining, MSG_NOSIGNAL);
         if (sent < 0) {
             if (errno == EINTR) continue;
+            if (errno == EAGAIN || errno == EWOULDBLOCK) return false;
             return false;
         }
         if (sent == 0) return false;
