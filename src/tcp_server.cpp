@@ -78,17 +78,41 @@ void TcpServer::acceptLoop() {
             if (running_) log("accept() failed: " + std::string(std::strerror(errno)));
             continue;
         }
+
+#ifdef SO_NOSIGPIPE
+        int yes = 1;
+        setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+#endif
+
         std::lock_guard<std::mutex> lock(clients_mutex_);
         clients_.push_back(client);
         log("client connected");
     }
 }
 
+bool TcpServer::sendAll(int client, const std::string& payload) {
+    const char* data = payload.data();
+    size_t remaining = payload.size();
+
+    while (remaining > 0) {
+        ssize_t sent = ::send(client, data, remaining, MSG_NOSIGNAL);
+        if (sent < 0) {
+            if (errno == EINTR) continue;
+            return false;
+        }
+        if (sent == 0) return false;
+
+        data += sent;
+        remaining -= static_cast<size_t>(sent);
+    }
+
+    return true;
+}
+
 void TcpServer::broadcast(const std::string& payload) {
     std::lock_guard<std::mutex> lock(clients_mutex_);
     for (auto it = clients_.begin(); it != clients_.end();) {
-        ssize_t sent = ::send(*it, payload.data(), payload.size(), MSG_NOSIGNAL);
-        if (sent < 0) {
+        if (!sendAll(*it, payload)) {
             ::close(*it);
             it = clients_.erase(it);
             log("client disconnected");

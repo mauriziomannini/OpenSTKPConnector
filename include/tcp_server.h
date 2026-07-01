@@ -19,6 +19,7 @@ public:
 
 private:
     void acceptLoop();
+    bool sendAll(int client, const std::string& payload);
 
     int port_;
     int server_fd_ = -1;
