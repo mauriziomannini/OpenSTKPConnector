@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to X-Plane",
+      "type": "cppdbg",
+      "request": "attach",
+      "program": "/Applications/X-Plane 12/X-Plane.app/Contents/MacOS/X-Plane",
+      "MIMode": "lldb"
+    }
+  ]
+}

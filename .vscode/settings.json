@@ -1,0 +1,9 @@
+{
+  "cmake.configureOnOpen": true,
+  "cmake.generator": "Ninja",
+  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.configureEnvironment": {
+    "XPLANE_SDK": "/Users/maurizio/Development/XPSDK"
+  },
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}
