@@ -5,7 +5,7 @@
 
 namespace ostkp {
 
-enum class DataRefType { Float, Double, FloatArray };
+enum class DataRefType { Float, Double, Int, FloatArray, IntArray };
 
 struct DataRefItem {
     std::string name;

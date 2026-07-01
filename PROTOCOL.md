@@ -42,7 +42,9 @@ Tipi osservati:
 
 - `uf`: float
 - `ud`: double
+- `ui`: integer
 - `ufa`: array di float
+- `uia`: array di integer
 
 Esempi reali:
 
@@ -58,7 +60,9 @@ uf sim/flightmodel/position/theta 4.567834854
 uf sim/flightmodel/position/phi -0.6007277369
 uf sim/flightmodel/position/psi 228.0806427
 uf sim/time/zulu_time_sec 68714.3125
+ui sim/flightmodel/failures/onground_all 0
 ufa sim/flightmodel2/engines/N2_percent [18.2262,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+uia sim/flightmodel2/gear/on_ground [0,1,1,0,0,0,0,0,0,0]
 ```
 
 ## DataRef iniziali osservati
@@ -67,12 +71,14 @@ Elenco iniziale ricavato dalla cattura:
 
 ```text
 sim/flightmodel/position/groundspeed
+sim/flightmodel/position/indicated_airspeed
 sim/flightmodel/position/true_airspeed
 sim/flightmodel/position/latitude
 sim/flightmodel/position/longitude
 sim/flightmodel/position/y_agl
 sim/flightmodel/position/elevation
 sim/flightmodel/position/mag_psi
+sim/flightmodel/position/magnetic_variation
 sim/flightmodel/position/theta
 sim/flightmodel/position/phi
 sim/flightmodel/position/psi
@@ -83,7 +89,10 @@ sim/flightmodel/position/local_vz
 sim/time/local_time_sec
 sim/time/zulu_time_sec
 sim/flightmodel/weight/m_fuel_total
+sim/flightmodel/failures/onground_all
+sim/flightmodel/failures/onground_any
 sim/flightmodel2/engines/N2_percent
+sim/flightmodel2/gear/on_ground
 ```
 
 Il file completo `docs/Wireshark/stream.txt` contiene molti altri campioni del flusso reale.
