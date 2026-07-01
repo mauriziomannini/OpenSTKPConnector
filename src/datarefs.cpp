@@ -8,14 +8,14 @@ namespace ostkp {
 void DataRefs::initialize() {
     items_ = {
         {"sim/flightmodel/position/groundspeed", DataRefType::Float},
-        {"sim/flightmodel/position/indicated_airspeed", DataRefType::Float},
+        {"sim/flightmodel/position/indicated_airspeed", DataRefType::Float, nullptr, 16, 10},
         {"sim/flightmodel/position/true_airspeed", DataRefType::Float},
         {"sim/flightmodel/position/latitude", DataRefType::Double},
         {"sim/flightmodel/position/longitude", DataRefType::Double},
         {"sim/flightmodel/position/y_agl", DataRefType::Float},
         {"sim/flightmodel/position/elevation", DataRefType::Double},
         {"sim/flightmodel/position/mag_psi", DataRefType::Float},
-        {"sim/flightmodel/position/magnetic_variation", DataRefType::Float},
+        {"sim/flightmodel/position/magnetic_variation", DataRefType::Float, nullptr, 16, 10},
         {"sim/flightmodel/position/theta", DataRefType::Float},
         {"sim/flightmodel/position/phi", DataRefType::Float},
         {"sim/flightmodel/position/psi", DataRefType::Float},
@@ -25,11 +25,11 @@ void DataRefs::initialize() {
         {"sim/flightmodel/position/local_vz", DataRefType::Float},
         {"sim/time/local_time_sec", DataRefType::Float},
         {"sim/time/zulu_time_sec", DataRefType::Float},
-        {"sim/flightmodel/weight/m_fuel_total", DataRefType::Float},
-        {"sim/flightmodel/failures/onground_all", DataRefType::Int},
-        {"sim/flightmodel/failures/onground_any", DataRefType::Int},
+        {"sim/flightmodel/weight/m_fuel_total", DataRefType::Float, nullptr, 16, 25},
+        {"sim/flightmodel/failures/onground_all", DataRefType::Int, nullptr, 16, 250},
+        {"sim/flightmodel/failures/onground_any", DataRefType::Int, nullptr, 16, 1000},
         {"sim/flightmodel2/engines/N2_percent", DataRefType::FloatArray, nullptr, 16},
-        {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, 10},
+        {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, 10, 125},
     };
 
     for (auto& item : items_) {
@@ -39,12 +39,14 @@ void DataRefs::initialize() {
     log("DataRefs initialized: " + std::to_string(items_.size()));
 }
 
-std::string DataRefs::buildFrame() const {
+std::string DataRefs::buildFrame() {
     std::ostringstream out;
     out << std::setprecision(10);
+    ++frame_counter_;
 
     for (const auto& item : items_) {
         if (!item.ref) continue;
+        if (item.send_every_frames > 1 && frame_counter_ % item.send_every_frames != 0) continue;
         switch (item.type) {
             case DataRefType::Float:
                 out << "uf " << item.name << " " << XPLMGetDataf(item.ref) << "\n";
