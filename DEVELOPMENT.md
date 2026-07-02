@@ -46,6 +46,19 @@ cmake -S . -B build -G Ninja \
 cmake --build build
 ```
 
+La build copia automaticamente il plugin anche in:
+
+```text
+dist/OpenSTKPConnector/mac.xpl
+dist/stkpconnector/mac.xpl
+```
+
+Per i test con SimToolkitPro usare:
+
+```text
+dist/stkpconnector/mac.xpl
+```
+
 Build Universal:
 
 ```bash
@@ -78,19 +91,40 @@ nc 127.0.0.1 51303
 Dovresti vedere righe tipo:
 
 ```text
+STKPCONNECT 1
+STKPCONNECT-VERSION 2020
+sub sim/time/paused
 uf sim/flightmodel/position/groundspeed 0
 ud sim/flightmodel/position/latitude 43.81456867
 ```
 
 ## Installazione plugin
 
-Copiare `mac.xpl` in:
+Per SimToolkitPro, copiare `dist/stkpconnector/mac.xpl` in:
 
 ```text
-X-Plane 12/Resources/plugins/OpenSTKPConnector/mac.xpl
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
 ```
 
+La cartella deve chiamarsi `stkpconnector`, perché STKP controlla la presenza del plugin originale in quel percorso.
+
 Controllare `X-Plane 12/Log.txt` per messaggi `[OpenSTKPConnector]`.
+
+## Stato v0.3
+
+Verificato:
+
+- plugin caricato da X-Plane 12 in modalità Apple Silicon nativa;
+- server TCP attivo su `127.0.0.1:51303`;
+- SimToolkitPro mostra l'aereo sulla mappa;
+- tracking base durante un volo breve;
+- salvataggio log STKP completato dopo fine volo manuale.
+
+Da analizzare:
+
+- chiusura automatica del volo in STKP;
+- gestione più precisa delle connessioni multiple aperte da STKP;
+- eventuale riduzione del set DataRef dopo altri test reali.
 
 ## Roadmap suggerita per Codex
 
@@ -99,8 +133,8 @@ Controllare `X-Plane 12/Log.txt` per messaggi `[OpenSTKPConnector]`.
 3. Confermare caricamento plugin in X-Plane nativo Apple Silicon.
 4. Confermare `LISTEN` su porta `51303`.
 5. Testare connessione con `nc`.
-6. Avviare SimToolkitPro in Network Mode su `127.0.0.1:51303`.
-7. Aggiungere DataRef mancanti osservati nel file `stream.txt`.
-8. Aggiungere logging configurabile.
-9. Migliorare gestione client multipli/disconnessioni.
+6. Avviare SimToolkitPro e verificare comparsa aereo sulla mappa.
+7. Analizzare la fine volo automatica.
+8. Migliorare gestione client multipli/disconnessioni.
+9. Aggiungere logging configurabile se necessario.
 10. Preparare release Universal.

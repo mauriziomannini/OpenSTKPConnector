@@ -14,7 +14,15 @@ Questo progetto mira a ricreare il comportamento minimo del connector:
 
 ## Stato del progetto
 
-Questo repository è uno scheletro tecnico con documentazione di reverse engineering già inclusa.
+Versione interna corrente: `v0.3`.
+
+Stato funzionale:
+
+- X-Plane 12 nativo Apple Silicon carica il plugin;
+- il plugin apre un server TCP su `127.0.0.1:51303`;
+- SimToolkitPro si collega e vede l'aereo sulla mappa;
+- il tracking base di posizione/volo è stato verificato in un volo breve;
+- la chiusura automatica del volo in STKP dopo la chiusura di X-Plane è ancora da analizzare meglio.
 
 La parte più importante da leggere prima di sviluppare è:
 
@@ -27,9 +35,9 @@ La parte più importante da leggere prima di sviluppare è:
 ## Materiale incluso
 
 ```text
-docs/Wireshark/stream.txt                  flusso TCP ASCII esportato
-docs/Wireshark/stkp_capture.pcapng         cattura Wireshark completa
-docs/Wireshark/screenshots/                screenshot analisi Wireshark/lsof
+docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt  flusso TCP ASCII completo
+docs/Wireshark GoldenFlight/GoldenFlight.pcapng      cattura Wireshark completa
+docs/Wireshark GoldenFlight/*.png                    screenshot analisi Wireshark
 docs/OriginalPlugin/stkpconnector_original.zip  plugin originale Intel-only
 ```
 
@@ -73,6 +81,29 @@ Output atteso:
 
 ```text
 build/mac.xpl
+dist/OpenSTKPConnector/mac.xpl
+dist/stkpconnector/mac.xpl
+```
+
+Per il test con SimToolkitPro usare il file in `dist/stkpconnector/mac.xpl`.
+
+## Installazione
+
+SimToolkitPro cerca il plugin originale nella cartella `stkpconnector`. Per compatibilità, installare il plugin così:
+
+```text
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
+```
+
+Chiudere X-Plane prima di sostituire `mac.xpl`.
+
+Con X-Plane avviato, nel file `X-Plane 12/Log.txt` dovrebbero comparire righe simili:
+
+```text
+[OpenSTKPConnector] starting
+[OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
+[OpenSTKPConnector] client connected
+[OpenSTKPConnector] protocol greeting sent
 ```
 
 ## Test rapido
@@ -85,6 +116,17 @@ nc 127.0.0.1 51303
 ```
 
 ## Protocollo sintetico
+
+Quando SimToolkitPro si collega, il plugin invia prima un greeting compatibile:
+
+```text
+STKPCONNECT 1
+STKPCONNECT-VERSION 2020
+sub sim/time/paused
+...
+```
+
+Poi invia i valori DataRef in formato testuale:
 
 Formato osservato:
 
