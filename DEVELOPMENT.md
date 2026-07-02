@@ -66,7 +66,16 @@ cmake -S . -B build-universal -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build build-universal
+lipo -info build-universal/mac.xpl
 ```
+
+Output atteso:
+
+```text
+Architectures in the fat file: build-universal/mac.xpl are: x86_64 arm64
+```
+
+Nota: il comando `POST_BUILD` copia sempre il risultato dell'ultima build in `dist/OpenSTKPConnector/mac.xpl` e `dist/stkpconnector/mac.xpl`. Dopo una build Universal, anche i file in `dist/` sono Universal.
 
 ## Test porta
 

@@ -72,9 +72,25 @@ $XPLANE_SDK/CHeaders/XPLM/XPLMUtilities.h
 
 ## Build
 
+Build Apple Silicon:
+
 ```bash
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64
 cmake --build build
+```
+
+Build Universal verificata:
+
+```bash
+cmake -S . -B build-universal -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+cmake --build build-universal
+lipo -info build-universal/mac.xpl
+```
+
+Output `lipo` atteso:
+
+```text
+Architectures in the fat file: build-universal/mac.xpl are: x86_64 arm64
 ```
 
 Output atteso:
@@ -84,6 +100,8 @@ build/mac.xpl
 dist/OpenSTKPConnector/mac.xpl
 dist/stkpconnector/mac.xpl
 ```
+
+Nota: `dist/` viene aggiornato dall'ultima build eseguita. Se si compila `build-universal`, `dist/stkpconnector/mac.xpl` diventa Universal.
 
 Per il test con SimToolkitPro usare il file in `dist/stkpconnector/mac.xpl`.
 
