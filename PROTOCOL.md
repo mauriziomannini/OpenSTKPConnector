@@ -13,22 +13,24 @@ Questa documentazione deriva dall'analisi del plugin originale `stkpconnector` p
 
 - Il traffico principale è server -> client, cioè dati inviati da X-Plane/STKPConnector verso SimToolkitPro.
 - Nella cattura completa `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt` è presente anche traffico client -> server.
-- Il client SimToolkitPro invia un handshake iniziale e una lista di sottoscrizioni DataRef.
+- La parte che rende compatibile la sessione con SimToolkitPro è un greeting iniziale inviato dal plugin verso STKP.
 
 ## Handshake
 
-Nella cattura GoldenFlight SimToolkitPro apre la connessione con:
+Nella cattura GoldenFlight il flusso compatibile inizia con:
 
 ```text
 STKPCONNECT 1
 STKPCONNECT-VERSION 2020
 ```
 
-Subito dopo invia una serie di righe:
+Subito dopo vengono inviate una serie di righe:
 
 ```text
 sub <dataref>
 ```
+
+Nei test Apple Silicon il tracking in SimToolkitPro ha iniziato a funzionare solo quando OpenSTKPConnector ha inviato questo greeting prima della snapshot DataRef. Per questo, nell'implementazione attuale, il greeting viene inviato dal plugin al client appena la connessione TCP viene accettata.
 
 Esempi:
 
@@ -42,7 +44,7 @@ sub sim/aircraft/view/acf_descrip
 sub sim/aircraft/view/acf_ICAO
 ```
 
-Il plugin originale risponde con una snapshot iniziale dei DataRef sottoscritti e poi continua a inviare aggiornamenti.
+Dopo il greeting, il plugin invia una snapshot iniziale dei DataRef e poi continua con gli aggiornamenti periodici.
 
 ## Formato messaggi
 
@@ -111,7 +113,7 @@ sim/flightmodel2/engines/N2_percent
 sim/flightmodel2/gear/on_ground
 ```
 
-La cattura GoldenFlight aggiunge anche questi DataRef osservati nella fase di sottoscrizione e nella snapshot iniziale:
+La cattura GoldenFlight aggiunge anche questi DataRef osservati nel greeting e nella snapshot iniziale:
 
 ```text
 sim/time/paused
@@ -127,7 +129,7 @@ sim/aircraft/engine/acf_num_engines
 sim/aircraft/view/acf_ICAO
 ```
 
-I file completi `docs/Wireshark/stream.txt` e `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt` contengono campioni del flusso reale.
+Il file completo `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt` contiene campioni del flusso reale.
 
 ## Implicazione progettuale
 
@@ -135,7 +137,7 @@ Per compatibilità con SimToolkitPro è sufficiente implementare un plugin X-Pla
 
 1. si carichi nativamente in X-Plane 12 Apple Silicon;
 2. apra un TCP server su `127.0.0.1:51303`;
-3. accetti l'handshake e le righe `sub` inviate da SimToolkitPro;
+3. invii il greeting `STKPCONNECT`, `STKPCONNECT-VERSION` e le righe `sub` appena un client si collega;
 4. legga i DataRef necessari tramite X-Plane SDK;
 5. invii una snapshot iniziale compatibile quando un client si collega;
 6. invii righe ASCII nel formato osservato;

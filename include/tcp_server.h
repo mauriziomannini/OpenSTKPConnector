@@ -26,7 +26,6 @@ private:
         std::string input_buffer;
         bool handshake_logged = false;
         bool version_logged = false;
-        bool input_logged = false;
         bool has_subscription = false;
         int subscription_count = 0;
     };

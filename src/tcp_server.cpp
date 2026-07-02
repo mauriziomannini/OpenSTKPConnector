@@ -151,7 +151,6 @@ void TcpServer::acceptLoop() {
         ++initial_snapshot_request_count_;
         log("client connected");
         log("protocol greeting sent");
-        log("initial snapshot requested");
     }
 }
 
@@ -200,11 +199,6 @@ bool TcpServer::readClientInput(Client& client) {
     }
     if (received == 0) return false;
 
-    if (!client.input_logged) {
-        client.input_logged = true;
-        log("client data received: " + std::to_string(received) + " bytes");
-    }
-
     client.input_buffer.append(buffer, static_cast<size_t>(received));
 
     size_t newline = std::string::npos;
@@ -238,14 +232,11 @@ void TcpServer::handleClientLine(Client& client, std::string line) {
     }
 
     if (startsWith(line, "sub ")) {
-        const std::string dataref = line.substr(4);
         ++client.subscription_count;
-        log("subscription received: " + dataref);
 
         if (!client.has_subscription) {
             client.has_subscription = true;
             ++initial_snapshot_request_count_;
-            log("initial snapshot requested");
         }
         return;
     }

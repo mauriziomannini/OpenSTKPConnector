@@ -46,14 +46,16 @@ Risultati principali:
 
 - conversazione TCP locale su porta `51303`;
 - flusso ASCII leggibile;
-- nessun traffico osservato da SimToolkitPro verso il plugin;
-- nessun handshake iniziale.
+- il plugin originale apre il server TCP e invia un greeting testuale compatibile con SimToolkitPro;
+- il greeting osservato contiene `STKPCONNECT 1`, `STKPCONNECT-VERSION 2020` e una lista di righe `sub <dataref>`;
+- dopo il greeting il plugin invia una snapshot iniziale e poi lo stream di aggiornamento DataRef.
 
 File allegati nel repository:
 
-- `docs/Wireshark/stkp_capture.pcapng`
-- `docs/Wireshark/stream.txt`
-- `docs/Wireshark/screenshots/`
+- `docs/Wireshark GoldenFlight/GoldenFlight.pcapng`
+- `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt`
+- `docs/Wireshark GoldenFlight/Conversations.png`
+- `docs/Wireshark GoldenFlight/Endpoints.png`
 
 ## `lsof`
 
@@ -67,3 +69,5 @@ Questo conferma che il plugin è il server e SimToolkitPro il client.
 ## Conclusione
 
 È realistico creare un plugin alternativo, scritto da zero, che emuli il protocollo STKPConnector senza richiedere codice sorgente originale.
+
+Il primo test funzionale su Apple Silicon nativo ha confermato che SimToolkitPro mostra l'aereo sulla mappa quando il plugin alternativo invia il greeting STKP prima dei DataRef.
