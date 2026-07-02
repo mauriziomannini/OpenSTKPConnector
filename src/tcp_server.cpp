@@ -13,7 +13,7 @@
 #endif
 
 namespace {
-constexpr std::size_t kMaxClients = 32;
+constexpr std::size_t kMaxClients = 8;
 
 bool startsWith(const std::string& value, const char* prefix) {
     return value.rfind(prefix, 0) == 0;
