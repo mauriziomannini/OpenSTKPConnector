@@ -129,6 +129,7 @@ void TcpServer::acceptLoop() {
             if (running_) log("accept() failed: " + std::string(std::strerror(errno)));
             continue;
         }
+        const int client_id = next_client_id_++;
 
 #ifdef SO_NOSIGPIPE
         int yes = 1;
@@ -137,20 +138,21 @@ void TcpServer::acceptLoop() {
 
         if (!sendAll(client, buildProtocolGreeting())) {
             ::close(client);
-            log("client disconnected before protocol greeting");
+            log("client #" + std::to_string(client_id) + " disconnected before protocol greeting");
             continue;
         }
 
         std::lock_guard<std::mutex> lock(clients_mutex_);
         while (clients_.size() >= kMaxClients) {
+            const int oldest_id = clients_.front().id;
             ::close(clients_.front().fd);
             clients_.erase(clients_.begin());
-            log("oldest client disconnected");
+            log("client #" + std::to_string(oldest_id) + " disconnected (oldest); active clients: " + std::to_string(clients_.size()));
         }
-        clients_.push_back(Client{client});
+        clients_.push_back(Client{client, client_id});
         ++initial_snapshot_request_count_;
-        log("client connected");
-        log("protocol greeting sent");
+        log("client #" + std::to_string(client_id) + " connected; active clients: " + std::to_string(clients_.size()));
+        log("client #" + std::to_string(client_id) + " protocol greeting sent");
     }
 }
 
@@ -167,9 +169,10 @@ void TcpServer::pollClients() {
     std::lock_guard<std::mutex> lock(clients_mutex_);
     for (auto it = clients_.begin(); it != clients_.end();) {
         if (!readClientInput(*it)) {
+            const int client_id = it->id;
             ::close(it->fd);
             it = clients_.erase(it);
-            log("client disconnected");
+            log("client #" + std::to_string(client_id) + " disconnected; active clients: " + std::to_string(clients_.size()));
         } else {
             ++it;
         }
@@ -218,7 +221,7 @@ void TcpServer::handleClientLine(Client& client, std::string line) {
     if (line == "STKPCONNECT 1") {
         if (!client.handshake_logged) {
             client.handshake_logged = true;
-            log("client handshake received");
+            log("client #" + std::to_string(client.id) + " handshake received");
         }
         return;
     }
@@ -226,7 +229,7 @@ void TcpServer::handleClientLine(Client& client, std::string line) {
     if (startsWith(line, "STKPCONNECT-VERSION ")) {
         if (!client.version_logged) {
             client.version_logged = true;
-            log("client version received: " + line.substr(std::strlen("STKPCONNECT-VERSION ")));
+            log("client #" + std::to_string(client.id) + " version received: " + line.substr(std::strlen("STKPCONNECT-VERSION ")));
         }
         return;
     }
@@ -241,7 +244,7 @@ void TcpServer::handleClientLine(Client& client, std::string line) {
         return;
     }
 
-    log("client command ignored: " + line);
+    log("client #" + std::to_string(client.id) + " command ignored: " + line);
 }
 
 bool TcpServer::sendAll(int client, const std::string& payload) {
@@ -267,9 +270,10 @@ void TcpServer::broadcast(const std::string& payload) {
     std::lock_guard<std::mutex> lock(clients_mutex_);
     for (auto it = clients_.begin(); it != clients_.end();) {
         if (!sendAll(it->fd, payload)) {
+            const int client_id = it->id;
             ::close(it->fd);
             it = clients_.erase(it);
-            log("client disconnected");
+            log("client #" + std::to_string(client_id) + " disconnected; active clients: " + std::to_string(clients_.size()));
         } else {
             ++it;
         }

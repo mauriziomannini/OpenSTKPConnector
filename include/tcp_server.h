@@ -23,6 +23,7 @@ public:
 private:
     struct Client {
         int fd = -1;
+        int id = 0;
         std::string input_buffer;
         bool handshake_logged = false;
         bool version_logged = false;
@@ -39,6 +40,7 @@ private:
     int server_fd_ = -1;
     std::atomic<bool> running_{false};
     std::atomic<int> initial_snapshot_request_count_{0};
+    std::atomic<int> next_client_id_{1};
     std::thread thread_;
     mutable std::mutex clients_mutex_;
     std::vector<Client> clients_;
