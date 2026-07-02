@@ -95,8 +95,18 @@ void TcpServer::acceptLoop() {
             log("oldest client disconnected");
         }
         clients_.push_back(client);
+        ++new_client_count_;
         log("client connected");
     }
+}
+
+bool TcpServer::hasClients() const {
+    std::lock_guard<std::mutex> lock(clients_mutex_);
+    return !clients_.empty();
+}
+
+int TcpServer::consumeNewClientCount() {
+    return new_client_count_.exchange(0);
 }
 
 bool TcpServer::sendAll(int client, const std::string& payload) {

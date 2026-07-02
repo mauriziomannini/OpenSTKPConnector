@@ -1,34 +1,48 @@
 # Protocollo STKPConnector osservato
 
-Questa documentazione deriva dall'analisi del plugin originale `stkpconnector` per X-Plane 12 su macOS e da una cattura Wireshark effettuata con X-Plane 12 avviato in Rosetta.
+Questa documentazione deriva dall'analisi del plugin originale `stkpconnector` per X-Plane 12 su macOS e da catture Wireshark effettuate con X-Plane 12 avviato in Rosetta.
 
 ## Ruoli di rete
 
 - Il plugin STKPConnector dentro X-Plane apre un server TCP su `127.0.0.1:51303`.
 - SimToolkitPro si collega come client alla porta `51303`.
-- Nella cattura osservata la connessione era `127.0.0.1:53110 -> 127.0.0.1:51303`.
+- In una delle catture osservate la connessione era `127.0.0.1:53110 -> 127.0.0.1:51303`.
 - `lsof` conferma che `X-Plane` è in `LISTEN` su `*:51303`.
 
 ## Direzione del traffico
 
-- Il traffico osservato è solo server -> client.
-- Nel `Follow TCP Stream` di Wireshark compare solo testo rosso, cioè dati inviati da X-Plane/STKPConnector verso SimToolkitPro.
-- Non è stato osservato alcun comando inviato da SimToolkitPro al plugin.
+- Il traffico principale è server -> client, cioè dati inviati da X-Plane/STKPConnector verso SimToolkitPro.
+- Nella cattura completa `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt` è presente anche traffico client -> server.
+- Il client SimToolkitPro invia un handshake iniziale e una lista di sottoscrizioni DataRef.
 
 ## Handshake
 
-Non è stato osservato alcun handshake iniziale.
+Nella cattura GoldenFlight SimToolkitPro apre la connessione con:
 
-Assenti, nella cattura:
+```text
+STKPCONNECT 1
+STKPCONNECT-VERSION 2020
+```
 
-- `HELLO`
-- `CONNECT`
-- autenticazione
-- versione protocollo
-- sottoscrizione a DataRef
-- heartbeat lato client
+Subito dopo invia una serie di righe:
 
-La connessione inizia direttamente con righe DataRef.
+```text
+sub <dataref>
+```
+
+Esempi:
+
+```text
+sub sim/time/paused
+sub sim/time/sim_speed
+sub sim/flightmodel/position/groundspeed
+sub sim/flightmodel/position/latitude
+sub sim/flightmodel/position/longitude
+sub sim/aircraft/view/acf_descrip
+sub sim/aircraft/view/acf_ICAO
+```
+
+Il plugin originale risponde con una snapshot iniziale dei DataRef sottoscritti e poi continua a inviare aggiornamenti.
 
 ## Formato messaggi
 
@@ -45,6 +59,7 @@ Tipi osservati:
 - `ui`: integer
 - `ufa`: array di float
 - `uia`: array di integer
+- `ub`: byte/stringa codificata in Base64
 
 Esempi reali:
 
@@ -63,6 +78,7 @@ uf sim/time/zulu_time_sec 68714.3125
 ui sim/flightmodel/failures/onground_all 0
 ufa sim/flightmodel2/engines/N2_percent [18.2262,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 uia sim/flightmodel2/gear/on_ground [0,1,1,0,0,0,0,0,0,0]
+ub sim/aircraft/view/acf_ICAO QzE3MgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
 ```
 
 ## DataRef iniziali osservati
@@ -95,7 +111,23 @@ sim/flightmodel2/engines/N2_percent
 sim/flightmodel2/gear/on_ground
 ```
 
-Il file completo `docs/Wireshark/stream.txt` contiene molti altri campioni del flusso reale.
+La cattura GoldenFlight aggiunge anche questi DataRef osservati nella fase di sottoscrizione e nella snapshot iniziale:
+
+```text
+sim/time/paused
+sim/time/sim_speed
+sim/aircraft/view/acf_descrip
+sim/aircraft/parts/acf_gear_deploy
+sim/flightmodel/controls/flaprqst
+sim/aircraft/controls/acf_flap_detents
+sim/operation/override/override_planepath
+sim/time/is_in_replay
+sim/cockpit/radios/com1_freq_hz
+sim/aircraft/engine/acf_num_engines
+sim/aircraft/view/acf_ICAO
+```
+
+I file completi `docs/Wireshark/stream.txt` e `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt` contengono campioni del flusso reale.
 
 ## Implicazione progettuale
 
@@ -103,8 +135,10 @@ Per compatibilità con SimToolkitPro è sufficiente implementare un plugin X-Pla
 
 1. si carichi nativamente in X-Plane 12 Apple Silicon;
 2. apra un TCP server su `127.0.0.1:51303`;
-3. legga i DataRef necessari tramite X-Plane SDK;
-4. invii righe ASCII nel formato osservato;
-5. mantenga la connessione persistente finché il client resta connesso.
+3. accetti l'handshake e le righe `sub` inviate da SimToolkitPro;
+4. legga i DataRef necessari tramite X-Plane SDK;
+5. invii una snapshot iniziale compatibile quando un client si collega;
+6. invii righe ASCII nel formato osservato;
+7. mantenga la connessione persistente finché il client resta connesso.
 
 Non è necessario modificare SimToolkitPro.

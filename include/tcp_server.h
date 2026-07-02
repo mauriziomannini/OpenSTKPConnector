@@ -16,6 +16,8 @@ public:
     void stop();
     void broadcast(const std::string& payload);
     bool isRunning() const { return running_; }
+    bool hasClients() const;
+    int consumeNewClientCount();
 
 private:
     void acceptLoop();
@@ -24,8 +26,9 @@ private:
     int port_;
     int server_fd_ = -1;
     std::atomic<bool> running_{false};
+    std::atomic<int> new_client_count_{0};
     std::thread thread_;
-    std::mutex clients_mutex_;
+    mutable std::mutex clients_mutex_;
     std::vector<int> clients_;
 };
 
