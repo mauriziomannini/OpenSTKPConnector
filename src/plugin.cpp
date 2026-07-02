@@ -13,7 +13,8 @@ ostkp::DataRefs g_datarefs;
 
 float flightLoopCallback(float, float, int, void*) {
     if (g_server && g_server->isRunning() && g_server->hasClients()) {
-        const bool force_full_frame = g_server->consumeNewClientCount() > 0;
+        g_server->pollClients();
+        const bool force_full_frame = g_server->consumeInitialSnapshotRequestCount() > 0;
         g_server->broadcast(g_datarefs.buildFrame(force_full_frame));
     }
     return 0.05f;

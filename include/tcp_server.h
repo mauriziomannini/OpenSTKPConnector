@@ -14,22 +14,35 @@ public:
 
     bool start();
     void stop();
+    void pollClients();
     void broadcast(const std::string& payload);
     bool isRunning() const { return running_; }
     bool hasClients() const;
-    int consumeNewClientCount();
+    int consumeInitialSnapshotRequestCount();
 
 private:
+    struct Client {
+        int fd = -1;
+        std::string input_buffer;
+        bool handshake_logged = false;
+        bool version_logged = false;
+        bool input_logged = false;
+        bool has_subscription = false;
+        int subscription_count = 0;
+    };
+
     void acceptLoop();
+    bool readClientInput(Client& client);
+    void handleClientLine(Client& client, std::string line);
     bool sendAll(int client, const std::string& payload);
 
     int port_;
     int server_fd_ = -1;
     std::atomic<bool> running_{false};
-    std::atomic<int> new_client_count_{0};
+    std::atomic<int> initial_snapshot_request_count_{0};
     std::thread thread_;
     mutable std::mutex clients_mutex_;
-    std::vector<int> clients_;
+    std::vector<Client> clients_;
 };
 
 }

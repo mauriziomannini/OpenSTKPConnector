@@ -4,6 +4,7 @@
 #include <cerrno>
 #include <cstring>
 #include <netinet/in.h>
+#include <sys/select.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -12,7 +13,53 @@
 #endif
 
 namespace {
-constexpr std::size_t kMaxClients = 4;
+constexpr std::size_t kMaxClients = 32;
+
+bool startsWith(const std::string& value, const char* prefix) {
+    return value.rfind(prefix, 0) == 0;
+}
+
+std::string buildProtocolGreeting() {
+    return
+        "STKPCONNECT 1\n"
+        "STKPCONNECT-VERSION 2020\n"
+        "\n"
+        "sub sim/time/paused\n"
+        "sub sim/time/sim_speed\n"
+        "sub sim/flightmodel/position/groundspeed\n"
+        "sub sim/flightmodel/position/indicated_airspeed\n"
+        "sub sim/flightmodel/position/true_airspeed\n"
+        "sub sim/flightmodel/position/latitude\n"
+        "sub sim/flightmodel/position/longitude\n"
+        "sub sim/flightmodel/position/y_agl\n"
+        "sub sim/flightmodel/position/elevation\n"
+        "sub sim/flightmodel/failures/onground_any\n"
+        "sub sim/flightmodel/failures/onground_all\n"
+        "sub sim/flightmodel2/gear/on_ground\n"
+        "sub sim/flightmodel/position/mag_psi\n"
+        "sub sim/flightmodel/position/theta\n"
+        "sub sim/flightmodel/position/phi\n"
+        "sub sim/flightmodel/position/psi\n"
+        "sub sim/flightmodel/position/local_vy\n"
+        "sub sim/flightmodel/forces/g_nrml\n"
+        "sub sim/aircraft/view/acf_descrip\n"
+        "sub sim/aircraft/parts/acf_gear_deploy\n"
+        "sub sim/flightmodel/controls/flaprqst\n"
+        "sub sim/aircraft/controls/acf_flap_detents\n"
+        "sub sim/operation/override/override_planepath\n"
+        "sub sim/flightmodel/position/local_vx\n"
+        "sub sim/flightmodel/position/local_vz\n"
+        "sub sim/aircraft/parts/acf_gear_deploy\n"
+        "sub sim/time/local_time_sec\n"
+        "sub sim/time/zulu_time_sec\n"
+        "sub sim/time/is_in_replay\n"
+        "sub sim/flightmodel/position/magnetic_variation\n"
+        "sub sim/cockpit/radios/com1_freq_hz\n"
+        "sub sim/flightmodel/weight/m_fuel_total\n"
+        "sub sim/flightmodel2/engines/N2_percent\n"
+        "sub sim/aircraft/engine/acf_num_engines\n"
+        "sub sim/aircraft/view/acf_ICAO\n";
+}
 }
 
 namespace ostkp {
@@ -70,7 +117,7 @@ void TcpServer::stop() {
     if (thread_.joinable()) thread_.join();
 
     std::lock_guard<std::mutex> lock(clients_mutex_);
-    for (int fd : clients_) ::close(fd);
+    for (const auto& client : clients_) ::close(client.fd);
     clients_.clear();
     log("TCP server stopped");
 }
@@ -88,15 +135,23 @@ void TcpServer::acceptLoop() {
         setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
 #endif
 
+        if (!sendAll(client, buildProtocolGreeting())) {
+            ::close(client);
+            log("client disconnected before protocol greeting");
+            continue;
+        }
+
         std::lock_guard<std::mutex> lock(clients_mutex_);
         while (clients_.size() >= kMaxClients) {
-            ::close(clients_.front());
+            ::close(clients_.front().fd);
             clients_.erase(clients_.begin());
             log("oldest client disconnected");
         }
-        clients_.push_back(client);
-        ++new_client_count_;
+        clients_.push_back(Client{client});
+        ++initial_snapshot_request_count_;
         log("client connected");
+        log("protocol greeting sent");
+        log("initial snapshot requested");
     }
 }
 
@@ -105,8 +160,97 @@ bool TcpServer::hasClients() const {
     return !clients_.empty();
 }
 
-int TcpServer::consumeNewClientCount() {
-    return new_client_count_.exchange(0);
+int TcpServer::consumeInitialSnapshotRequestCount() {
+    return initial_snapshot_request_count_.exchange(0);
+}
+
+void TcpServer::pollClients() {
+    std::lock_guard<std::mutex> lock(clients_mutex_);
+    for (auto it = clients_.begin(); it != clients_.end();) {
+        if (!readClientInput(*it)) {
+            ::close(it->fd);
+            it = clients_.erase(it);
+            log("client disconnected");
+        } else {
+            ++it;
+        }
+    }
+}
+
+bool TcpServer::readClientInput(Client& client) {
+    fd_set read_set;
+    FD_ZERO(&read_set);
+    FD_SET(client.fd, &read_set);
+
+    timeval timeout{};
+    const int ready = ::select(client.fd + 1, &read_set, nullptr, nullptr, &timeout);
+    if (ready < 0) {
+        if (errno == EINTR) return true;
+        log("select() failed: " + std::string(std::strerror(errno)));
+        return false;
+    }
+    if (ready == 0 || !FD_ISSET(client.fd, &read_set)) return true;
+
+    char buffer[4096];
+    const ssize_t received = ::recv(client.fd, buffer, sizeof(buffer), 0);
+    if (received < 0) {
+        if (errno == EINTR) return true;
+        log("recv() failed: " + std::string(std::strerror(errno)));
+        return false;
+    }
+    if (received == 0) return false;
+
+    if (!client.input_logged) {
+        client.input_logged = true;
+        log("client data received: " + std::to_string(received) + " bytes");
+    }
+
+    client.input_buffer.append(buffer, static_cast<size_t>(received));
+
+    size_t newline = std::string::npos;
+    while ((newline = client.input_buffer.find('\n')) != std::string::npos) {
+        std::string line = client.input_buffer.substr(0, newline);
+        client.input_buffer.erase(0, newline + 1);
+        handleClientLine(client, line);
+    }
+
+    return true;
+}
+
+void TcpServer::handleClientLine(Client& client, std::string line) {
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+    if (line.empty()) return;
+
+    if (line == "STKPCONNECT 1") {
+        if (!client.handshake_logged) {
+            client.handshake_logged = true;
+            log("client handshake received");
+        }
+        return;
+    }
+
+    if (startsWith(line, "STKPCONNECT-VERSION ")) {
+        if (!client.version_logged) {
+            client.version_logged = true;
+            log("client version received: " + line.substr(std::strlen("STKPCONNECT-VERSION ")));
+        }
+        return;
+    }
+
+    if (startsWith(line, "sub ")) {
+        const std::string dataref = line.substr(4);
+        ++client.subscription_count;
+        log("subscription received: " + dataref);
+
+        if (!client.has_subscription) {
+            client.has_subscription = true;
+            ++initial_snapshot_request_count_;
+            log("initial snapshot requested");
+        }
+        return;
+    }
+
+    log("client command ignored: " + line);
 }
 
 bool TcpServer::sendAll(int client, const std::string& payload) {
@@ -131,8 +275,8 @@ bool TcpServer::sendAll(int client, const std::string& payload) {
 void TcpServer::broadcast(const std::string& payload) {
     std::lock_guard<std::mutex> lock(clients_mutex_);
     for (auto it = clients_.begin(); it != clients_.end();) {
-        if (!sendAll(*it, payload)) {
-            ::close(*it);
+        if (!sendAll(it->fd, payload)) {
+            ::close(it->fd);
             it = clients_.erase(it);
             log("client disconnected");
         } else {
