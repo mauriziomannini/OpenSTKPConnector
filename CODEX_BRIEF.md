@@ -1,6 +1,6 @@
-# Brief per Codex / agente di sviluppo
+# Codex Development Brief
 
-Se stai lavorando su questo repository da VS Code, leggi prima questi file:
+If you are working on this repository from VS Code, read these files first:
 
 1. `README.md`
 2. `PROTOCOL.md`
@@ -8,43 +8,78 @@ Se stai lavorando su questo repository da VS Code, leggi prima questi file:
 4. `RESEARCH.md`
 5. `DEVELOPMENT.md`
 
-## Missione
+## Mission
 
-Implementare un plugin X-Plane 12 compatibile con SimToolkitPro che sostituisca il plugin originale STKPConnector Intel-only su macOS Apple Silicon.
+Implement an X-Plane 12 plugin compatible with SimToolkitPro, replacing the original Intel-only STKPConnector plugin on macOS Apple Silicon.
 
-## Vincoli importanti
+## Current Status
 
-- Non usare Qt.
-- Usare C++17 e socket BSD/POSIX.
-- Output: `mac.xpl`.
-- Porta: TCP `127.0.0.1:51303`.
-- Protocollo: ASCII, una riga per DataRef.
-- SimToolkitPro è client passivo: non invia comandi osservati.
-- Evitare di bloccare il flight loop: accept/client management su thread separato.
-- La funzione di broadcast deve tollerare client disconnessi.
+`v0.3` is the first functional baseline:
 
-## Formato protocollo
+- native Apple Silicon X-Plane 12 loads the plugin;
+- SimToolkitPro connects to `127.0.0.1:51303`;
+- the plugin sends the required STKP greeting;
+- SimToolkitPro displays and tracks the aircraft;
+- Universal Binary build has been verified.
+
+## Important Constraints
+
+- Do not use Qt.
+- Use C++17.
+- Use BSD/POSIX sockets.
+- Output binary name: `mac.xpl`.
+- SimToolkitPro-compatible installation path: `Resources/plugins/stkpconnector/mac.xpl`.
+- TCP port: `127.0.0.1:51303`.
+- Protocol: ASCII, one line per DataRef value.
+- Keep the flight loop non-blocking.
+- Accept/client management runs outside the flight loop.
+- Broadcast must tolerate disconnected clients.
+- Keep the implementation simple and maintainable.
+
+## Protocol Summary
+
+The plugin sends a compatibility greeting immediately after a TCP client connects:
+
+```text
+STKPCONNECT 1
+STKPCONNECT-VERSION 2020
+sub <dataref>
+```
+
+Then it sends DataRef values:
 
 ```text
 uf <dataref> <float>\n
 ud <dataref> <double>\n
-ufa <dataref> [v0,v1,...,v15]\n
+ui <dataref> <integer>\n
+ufa <dataref> [v0,v1,...]\n
+uia <dataref> [v0,v1,...]\n
+ub <dataref> <base64>\n
 ```
 
-## Primo obiettivo tecnico
+## Build Checks
 
-Far compilare il progetto e ottenere un `mac.xpl` caricabile da X-Plane 12 Apple Silicon.
-
-Poi verificare:
+Apple Silicon:
 
 ```bash
-lsof -nP -iTCP:51303
-nc 127.0.0.1 51303
+XPLANE_SDK=/Users/maurizio/Development/XPSDK cmake --build build
 ```
 
-## Materiale di riferimento
+Universal:
 
-- Flusso reale: `docs/Wireshark/stream.txt`
-- Cattura completa: `docs/Wireshark/stkp_capture.pcapng`
-- Screenshot Wireshark: `docs/Wireshark/screenshots/`
-- Plugin originale: `docs/OriginalPlugin/stkpconnector_original.zip`
+```bash
+XPLANE_SDK=/Users/maurizio/Development/XPSDK cmake --build build-universal
+lipo -info build-universal/mac.xpl
+```
+
+Expected Universal output:
+
+```text
+Architectures in the fat file: build-universal/mac.xpl are: x86_64 arm64
+```
+
+## Reference Material
+
+- Full reference stream: `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt`
+- Full capture: `docs/Wireshark GoldenFlight/GoldenFlight.pcapng`
+- Wireshark screenshots: `docs/Wireshark GoldenFlight/*.png`

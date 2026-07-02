@@ -1,91 +1,92 @@
-# Architettura OpenSTKPConnector
+# OpenSTKPConnector Architecture
 
-## Obiettivo
+## Goal
 
-Sostituire il plugin Intel-only `STKPConnector/mac.xpl` con un plugin nuovo, compilabile per Apple Silicon (`arm64`) e opzionalmente Universal (`arm64;x86_64`), compatibile con SimToolkitPro.
+Replace the original Intel-only `STKPConnector/mac.xpl` with a new plugin that can be built for Apple Silicon (`arm64`) and as a Universal Binary (`arm64;x86_64`) while remaining compatible with SimToolkitPro.
 
-## Architettura target
+## High-Level Architecture
 
 ```text
-X-Plane 12 nativo Apple Silicon
-        │
-        │ X-Plane SDK / DataRefs
-        ▼
+Native X-Plane 12
+        |
+        | X-Plane SDK / DataRefs
+        v
 OpenSTKPConnector.xpl
-        │
-        │ TCP server 127.0.0.1:51303
-        ▼
+        |
+        | TCP server 127.0.0.1:51303
+        v
 SimToolkitPro client
 ```
 
-## Componenti
+## Components
 
-### Plugin entrypoint
+### Plugin Entrypoint
 
 File: `src/plugin.cpp`
 
-Responsabilità:
+Responsibilities:
 
-- implementare `XPluginStart`, `XPluginStop`, `XPluginEnable`, `XPluginDisable`;
-- inizializzare DataRef manager;
-- avviare TCP server;
-- registrare il Flight Loop callback.
+- implement `XPluginStart`, `XPluginStop`, `XPluginEnable`, `XPluginDisable`;
+- initialize the DataRef manager;
+- start the TCP server;
+- register the flight loop callback;
+- broadcast DataRef frames from the simulator thread.
 
 ### TCP Server
 
 File: `src/tcp_server.cpp`
 
-Responsabilità:
+Responsibilities:
 
-- aprire socket TCP su `127.0.0.1:51303`;
-- accettare connessioni client;
-- inviare payload testuale a tutti i client connessi;
-- rimuovere client disconnessi;
-- evitare crash in caso di `SIGPIPE`/client chiuso.
+- open a TCP socket on `127.0.0.1:51303`;
+- accept SimToolkitPro client connections;
+- send the STKP protocol greeting immediately after accept;
+- send text payloads to connected clients;
+- read client input opportunistically without blocking the flight loop;
+- remove disconnected clients;
+- tolerate closed sockets and avoid `SIGPIPE` crashes.
+
+The server keeps a small client list with numeric ids for readable logging.
 
 ### DataRef Manager
 
 File: `src/datarefs.cpp`
 
-Responsabilità:
+Responsibilities:
 
-- registrare l'elenco dei DataRef da esportare;
-- risolverli con `XPLMFindDataRef`;
-- leggere valori float, double e array float;
-- generare un frame testuale nel formato compatibile.
+- define the DataRefs exported to SimToolkitPro;
+- resolve DataRefs with `XPLMFindDataRef`;
+- read scalar, array, and byte/string DataRef values;
+- serialize values into the STKP-compatible ASCII format;
+- throttle low-frequency DataRefs where appropriate;
+- produce a full snapshot when requested after a new client connection.
 
 ### Logger
 
 File: `src/logger.cpp`
 
-Responsabilità:
+Responsibilities:
 
-- scrivere messaggi diagnostici nel `Log.txt` di X-Plane tramite `XPLMDebugString`.
+- write diagnostic messages to X-Plane's `Log.txt` through `XPLMDebugString`.
 
-## Frequenza di invio
+## Send Frequency
 
-La bozza attuale invia un frame ogni `0.05s`, cioè circa 20 Hz.
+The current flight loop callback runs every `0.05s`, approximately 20 Hz.
 
-La frequenza andrà verificata contro la cattura originale. Se SimToolkitPro riceve correttamente, mantenere 20 Hz; altrimenti provare 10 Hz o 30 Hz.
+High-frequency flight position values are sent every frame. Lower-frequency or mostly static values are throttled and forced into the initial snapshot.
 
-## Output plugin
+## Plugin Output
 
-L'output deve chiamarsi:
+The binary must be named:
 
 ```text
 mac.xpl
 ```
 
-Da installare in:
+For SimToolkitPro compatibility, install it as:
 
 ```text
-X-Plane 12/Resources/plugins/OpenSTKPConnector/mac.xpl
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
 ```
 
-oppure, se si vuole seguire una struttura separata:
-
-```text
-X-Plane 12/Resources/plugins/OpenSTKPConnector/64/mac.xpl
-```
-
-La struttura esatta va testata con X-Plane 12 su macOS.
+The `dist/stkpconnector/mac.xpl` output is prepared specifically for this layout.

@@ -1,56 +1,57 @@
-# Ricerca e reverse engineering
+# Research and Reverse Engineering
 
-## Problema iniziale
+## Initial Problem
 
-SimToolkitPro 1.3.6 con plugin `stkpconnector` funziona con X-Plane 12 su MacBook Pro M1 solo se X-Plane viene avviato in Rosetta.
+SimToolkitPro 1.3.6 with the original `stkpconnector` plugin works with X-Plane 12 on Apple Silicon Macs only when X-Plane is launched through Rosetta.
 
-Con X-Plane 12 Apple Silicon nativo il tracking non funziona.
+In native Apple Silicon mode, X-Plane cannot load the original plugin and SimToolkitPro tracking does not work.
 
-## Analisi del plugin originale
+## Original Plugin Analysis
 
-Il file `mac.xpl` del plugin originale risulta compilato solo per Intel `x86_64`.
+The original `mac.xpl` plugin binary is Intel-only (`x86_64`).
 
-Risultato atteso con `file` o `lipo -info`:
+Expected result from `file` or `lipo -info`:
 
 ```text
 Mach-O 64-bit x86_64 dynamically linked shared library
 ```
 
-Le librerie Qt incluse risultano anch'esse Intel-only, in particolare:
+The bundled Qt libraries are Intel-only as well, especially:
 
 - `QtCore.framework`
 - `QtNetwork.framework`
 
-Non è stato trovato alcun binario `arm64` o Universal.
+No `arm64` or Universal Binary was found.
 
-## Conseguenza tecnica
+## Technical Consequence
 
-Un processo X-Plane `arm64` non può caricare un plugin `x86_64`.
+An `arm64` X-Plane process cannot load an `x86_64` plugin.
 
-Rosetta traduce l'intero processo, non un singolo plugin. Quindi:
+Rosetta translates the whole process, not individual plugins:
 
-- X-Plane in Rosetta -> processo `x86_64` -> plugin Intel caricabile;
-- X-Plane nativo Apple Silicon -> processo `arm64` -> plugin Intel non caricabile.
+- X-Plane through Rosetta -> `x86_64` process -> Intel plugin can load;
+- native Apple Silicon X-Plane -> `arm64` process -> Intel plugin cannot load.
 
-## Network Mode di SimToolkitPro
+## SimToolkitPro Network Mode
 
-Il Network Mode non elimina la necessità del plugin.
+Network Mode does not remove the need for an X-Plane plugin.
 
-Serve a collegare SimToolkitPro a un host/porta specifici, ma il server TCP deve comunque essere offerto dal plugin STKPConnector dentro X-Plane.
+It lets SimToolkitPro connect to a host and port, but the TCP server still needs to be provided by an X-Plane-side connector.
 
 ## Wireshark
 
-Cattura effettuata su interfaccia loopback `lo0`.
+Captures were made on the loopback interface `lo0`.
 
-Risultati principali:
+Key findings:
 
-- conversazione TCP locale su porta `51303`;
-- flusso ASCII leggibile;
-- il plugin originale apre il server TCP e invia un greeting testuale compatibile con SimToolkitPro;
-- il greeting osservato contiene `STKPCONNECT 1`, `STKPCONNECT-VERSION 2020` e una lista di righe `sub <dataref>`;
-- dopo il greeting il plugin invia una snapshot iniziale e poi lo stream di aggiornamento DataRef.
+- local TCP conversation on port `51303`;
+- readable ASCII stream;
+- the original plugin opens the TCP server;
+- the plugin sends an STKP-compatible text greeting;
+- the greeting contains `STKPCONNECT 1`, `STKPCONNECT-VERSION 2020`, and `sub <dataref>` lines;
+- after the greeting, the plugin sends an initial DataRef snapshot and then periodic DataRef updates.
 
-File allegati nel repository:
+Published reference files:
 
 - `docs/Wireshark GoldenFlight/GoldenFlight.pcapng`
 - `docs/Wireshark GoldenFlight/GoldenFlight_Stream.txt`
@@ -59,15 +60,19 @@ File allegati nel repository:
 
 ## `lsof`
 
-Output osservato:
+Observed output confirms:
 
-- `X-Plane` in `LISTEN` su `*:51303`;
-- `SimToolkitPro` connesso da porta effimera locale verso `127.0.0.1:51303`.
+- `X-Plane` listens on TCP port `51303`;
+- `SimToolkitPro` connects from a local ephemeral port to `127.0.0.1:51303`.
 
-Questo conferma che il plugin è il server e SimToolkitPro il client.
+This confirms that the plugin is the server and SimToolkitPro is the client.
 
-## Conclusione
+## Functional Test Result
 
-È realistico creare un plugin alternativo, scritto da zero, che emuli il protocollo STKPConnector senza richiedere codice sorgente originale.
+Native Apple Silicon testing confirmed that SimToolkitPro displays the aircraft on the map when OpenSTKPConnector sends the STKP greeting before the DataRef stream.
 
-Il primo test funzionale su Apple Silicon nativo ha confermato che SimToolkitPro mostra l'aereo sulla mappa quando il plugin alternativo invia il greeting STKP prima dei DataRef.
+Basic flight tracking was verified during a short test flight. Automatic flight ending in SimToolkitPro after X-Plane shutdown still needs further analysis.
+
+## Conclusion
+
+It is realistic to build a clean-room replacement plugin that emulates the observed STKPConnector protocol without using the original source code.

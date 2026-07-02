@@ -1,17 +1,17 @@
-# Guida sviluppo
+# Development Guide
 
-## Ambiente consigliato
+## Recommended Environment
 
-- macOS Apple Silicon
+- macOS
 - Visual Studio Code
-- Estensione Microsoft C/C++
-- Estensione CMake Tools
+- Microsoft C/C++ extension
+- CMake Tools extension
 - Xcode Command Line Tools
 - CMake
 - Ninja
 - X-Plane SDK
 
-## Installazione strumenti
+## Tool Installation
 
 ```bash
 xcode-select --install
@@ -20,13 +20,13 @@ brew install cmake ninja
 
 ## X-Plane SDK
 
-Scaricare l'X-Plane SDK e impostare:
+Download the X-Plane SDK and set:
 
 ```bash
 export XPLANE_SDK=$HOME/Development/XPSDK
 ```
 
-La cartella attesa è:
+Expected SDK layout:
 
 ```text
 $XPLANE_SDK/CHeaders/XPLM/XPLMPlugin.h
@@ -35,9 +35,11 @@ $XPLANE_SDK/CHeaders/XPLM/XPLMProcessing.h
 $XPLANE_SDK/CHeaders/XPLM/XPLMUtilities.h
 ```
 
-Se la struttura è diversa, aggiornare `CMakeLists.txt`.
+If your SDK is laid out differently, update `CMakeLists.txt`.
 
-## Build terminale
+## Terminal Build
+
+Apple Silicon build:
 
 ```bash
 cmake -S . -B build -G Ninja \
@@ -46,20 +48,20 @@ cmake -S . -B build -G Ninja \
 cmake --build build
 ```
 
-La build copia automaticamente il plugin anche in:
+The build automatically copies the plugin to:
 
 ```text
 dist/OpenSTKPConnector/mac.xpl
 dist/stkpconnector/mac.xpl
 ```
 
-Per i test con SimToolkitPro usare:
+For SimToolkitPro testing, use:
 
 ```text
 dist/stkpconnector/mac.xpl
 ```
 
-Build Universal:
+Universal build:
 
 ```bash
 cmake -S . -B build-universal -G Ninja \
@@ -69,35 +71,35 @@ cmake --build build-universal
 lipo -info build-universal/mac.xpl
 ```
 
-Output atteso:
+Expected output:
 
 ```text
 Architectures in the fat file: build-universal/mac.xpl are: x86_64 arm64
 ```
 
-Nota: il comando `POST_BUILD` copia sempre il risultato dell'ultima build in `dist/OpenSTKPConnector/mac.xpl` e `dist/stkpconnector/mac.xpl`. Dopo una build Universal, anche i file in `dist/` sono Universal.
+The `POST_BUILD` step always copies the latest build output to `dist/OpenSTKPConnector/mac.xpl` and `dist/stkpconnector/mac.xpl`. After a Universal build, the files in `dist/` are Universal too.
 
-## Test porta
+## Port Test
 
-Con X-Plane aperto:
+With X-Plane running:
 
 ```bash
 lsof -nP -iTCP:51303
 ```
 
-Output atteso:
+Expected output:
 
 ```text
 X-Plane ... TCP 127.0.0.1:51303 (LISTEN)
 ```
 
-## Test manuale senza SimToolkitPro
+## Manual Test Without SimToolkitPro
 
 ```bash
 nc 127.0.0.1 51303
 ```
 
-Dovresti vedere righe tipo:
+You should see lines such as:
 
 ```text
 STKPCONNECT 1
@@ -107,43 +109,39 @@ uf sim/flightmodel/position/groundspeed 0
 ud sim/flightmodel/position/latitude 43.81456867
 ```
 
-## Installazione plugin
+## Plugin Installation
 
-Per SimToolkitPro, copiare `dist/stkpconnector/mac.xpl` in:
+For SimToolkitPro, copy `dist/stkpconnector/mac.xpl` to:
 
 ```text
 X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
 ```
 
-La cartella deve chiamarsi `stkpconnector`, perché STKP controlla la presenza del plugin originale in quel percorso.
+The folder must be named `stkpconnector`, because STKP checks for the original plugin path.
 
-Controllare `X-Plane 12/Log.txt` per messaggi `[OpenSTKPConnector]`.
+Check `X-Plane 12/Log.txt` for `[OpenSTKPConnector]` messages.
 
-## Stato v0.3
+## v0.3 Status
 
-Verificato:
+Verified:
 
-- plugin caricato da X-Plane 12 in modalità Apple Silicon nativa;
-- server TCP attivo su `127.0.0.1:51303`;
-- SimToolkitPro mostra l'aereo sulla mappa;
-- tracking base durante un volo breve;
-- salvataggio log STKP completato dopo fine volo manuale.
+- plugin loads in native Apple Silicon X-Plane 12;
+- TCP server listens on `127.0.0.1:51303`;
+- SimToolkitPro displays the aircraft on the map;
+- basic tracking works during a short flight;
+- Universal Binary build works.
 
-Da analizzare:
+To investigate:
 
-- chiusura automatica del volo in STKP;
-- gestione più precisa delle connessioni multiple aperte da STKP;
-- eventuale riduzione del set DataRef dopo altri test reali.
+- automatic flight ending in SimToolkitPro;
+- more precise handling of client reconnects;
+- possible DataRef set reduction after more real-world tests.
 
-## Roadmap suggerita per Codex
+## Suggested Roadmap
 
-1. Verificare che il progetto compili con X-Plane SDK reale.
-2. Correggere include path SDK se necessario.
-3. Confermare caricamento plugin in X-Plane nativo Apple Silicon.
-4. Confermare `LISTEN` su porta `51303`.
-5. Testare connessione con `nc`.
-6. Avviare SimToolkitPro e verificare comparsa aereo sulla mappa.
-7. Analizzare la fine volo automatica.
-8. Migliorare gestione client multipli/disconnessioni.
-9. Aggiungere logging configurabile se necessario.
-10. Preparare release Universal.
+1. Keep v0.3 stable and reproducible.
+2. Tag the first functional release.
+3. Investigate automatic flight ending.
+4. Improve client connection handling if needed.
+5. Add configurable logging if needed.
+6. Prepare release artifacts for Universal Binary distribution.
