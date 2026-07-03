@@ -18,6 +18,7 @@ set(XPLANE_HEADERS "${XPLANE_SDK}/CHeaders")
 
 add_library(OpenSTKPConnector MODULE
     src/plugin.cpp
+    src/protocol.cpp
     src/tcp_server.cpp
     src/datarefs.cpp
     src/logger.cpp
