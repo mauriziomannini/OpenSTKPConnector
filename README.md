@@ -28,6 +28,7 @@ Verified:
 Known limitation:
 
 - automatic flight ending in SimToolkitPro after X-Plane shutdown still needs further investigation.
+- SimToolkitPro may show an "X-Plane Plugin update is required" warning when SimToolkitPro starts, even before X-Plane is launched. This appears to be caused by SimToolkitPro validating the official plugin package on disk, not by the OpenSTKPConnector TCP protocol. The warning does not necessarily indicate a tracking failure; tracking can still work once X-Plane loads OpenSTKPConnector.
 
 Recommended reading before development:
 

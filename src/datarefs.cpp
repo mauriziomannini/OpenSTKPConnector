@@ -61,10 +61,10 @@ void DataRefs::initialize() {
         {"sim/time/is_in_replay", DataRefType::Int, nullptr, 16, 1000},
         {"sim/cockpit/radios/com1_freq_hz", DataRefType::Int, nullptr, 16, 1000},
         {"sim/flightmodel/weight/m_fuel_total", DataRefType::Float, nullptr, 16, 25},
-        {"sim/flightmodel/failures/onground_all", DataRefType::Int, nullptr, 16, 250},
-        {"sim/flightmodel/failures/onground_any", DataRefType::Int, nullptr, 16, 1000},
+        {"sim/flightmodel/failures/onground_all", DataRefType::Int},
+        {"sim/flightmodel/failures/onground_any", DataRefType::Int},
         {"sim/flightmodel2/engines/N2_percent", DataRefType::FloatArray, nullptr, 16},
-        {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, 10, 125},
+        {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, 10},
         {"sim/aircraft/engine/acf_num_engines", DataRefType::Int, nullptr, 16, 1000},
         {"sim/aircraft/view/acf_ICAO", DataRefType::ByteData, nullptr, 0, 1000},
     };
