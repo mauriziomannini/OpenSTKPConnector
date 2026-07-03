@@ -13,7 +13,7 @@ Native X-Plane 12
         v
 OpenSTKPConnector.xpl
         |
-        | TCP server 127.0.0.1:51303
+        | STKP greeting + DataRef stream over TCP 127.0.0.1:51303
         v
 SimToolkitPro client
 ```
@@ -47,6 +47,21 @@ Responsibilities:
 - tolerate closed sockets and avoid `SIGPIPE` crashes.
 
 The server keeps a small client list with numeric ids for readable logging.
+
+### Protocol
+
+Files:
+
+- `include/protocol.h`
+- `src/protocol.cpp`
+
+Responsibilities:
+
+- define the STKP compatibility greeting;
+- keep the ordered list of DataRefs advertised with `sub <dataref>` lines;
+- preserve protocol details outside the TCP server implementation.
+
+The TCP server only asks this module to build the greeting. This keeps socket handling separate from STKP protocol content.
 
 ### DataRef Manager
 
