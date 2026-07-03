@@ -7,6 +7,13 @@ namespace ostkp {
 
 namespace {
 
+constexpr int kDefaultScalarCount = 16;
+constexpr int kGearArrayCount = 10;
+constexpr int kOverrideArrayCount = 20;
+constexpr int kVeryFrequentFrames = 10;
+constexpr int kFrequentFrames = 25;
+constexpr int kRareFrames = 1000;
+
 std::string base64Encode(const unsigned char* data, size_t size) {
     static constexpr char kAlphabet[] =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -33,40 +40,40 @@ std::string base64Encode(const unsigned char* data, size_t size) {
 
 void DataRefs::initialize() {
     items_ = {
-        {"sim/time/paused", DataRefType::Int, nullptr, 16, 1000},
-        {"sim/time/sim_speed", DataRefType::Int, nullptr, 16, 1000},
+        {"sim/time/paused", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
+        {"sim/time/sim_speed", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
         {"sim/flightmodel/position/groundspeed", DataRefType::Float},
-        {"sim/flightmodel/position/indicated_airspeed", DataRefType::Float, nullptr, 16, 10},
+        {"sim/flightmodel/position/indicated_airspeed", DataRefType::Float, nullptr, kDefaultScalarCount, kVeryFrequentFrames},
         {"sim/flightmodel/position/true_airspeed", DataRefType::Float},
         {"sim/flightmodel/position/latitude", DataRefType::Double},
         {"sim/flightmodel/position/longitude", DataRefType::Double},
         {"sim/flightmodel/position/y_agl", DataRefType::Float},
         {"sim/flightmodel/position/elevation", DataRefType::Double},
         {"sim/flightmodel/position/mag_psi", DataRefType::Float},
-        {"sim/flightmodel/position/magnetic_variation", DataRefType::Float, nullptr, 16, 10},
+        {"sim/flightmodel/position/magnetic_variation", DataRefType::Float, nullptr, kDefaultScalarCount, kVeryFrequentFrames},
         {"sim/flightmodel/position/theta", DataRefType::Float},
         {"sim/flightmodel/position/phi", DataRefType::Float},
         {"sim/flightmodel/position/psi", DataRefType::Float},
         {"sim/flightmodel/position/local_vy", DataRefType::Float},
         {"sim/flightmodel/forces/g_nrml", DataRefType::Float},
-        {"sim/aircraft/view/acf_descrip", DataRefType::ByteData, nullptr, 0, 1000},
-        {"sim/aircraft/parts/acf_gear_deploy", DataRefType::FloatArray, nullptr, 10, 1000},
-        {"sim/flightmodel/controls/flaprqst", DataRefType::Float, nullptr, 16, 25},
-        {"sim/aircraft/controls/acf_flap_detents", DataRefType::Int, nullptr, 16, 1000},
-        {"sim/operation/override/override_planepath", DataRefType::IntArray, nullptr, 20, 1000},
+        {"sim/aircraft/view/acf_descrip", DataRefType::ByteData, nullptr, 0, kRareFrames},
+        {"sim/aircraft/parts/acf_gear_deploy", DataRefType::FloatArray, nullptr, kGearArrayCount, kRareFrames},
+        {"sim/flightmodel/controls/flaprqst", DataRefType::Float, nullptr, kDefaultScalarCount, kFrequentFrames},
+        {"sim/aircraft/controls/acf_flap_detents", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
+        {"sim/operation/override/override_planepath", DataRefType::IntArray, nullptr, kOverrideArrayCount, kRareFrames},
         {"sim/flightmodel/position/local_vx", DataRefType::Float},
         {"sim/flightmodel/position/local_vz", DataRefType::Float},
         {"sim/time/local_time_sec", DataRefType::Float},
         {"sim/time/zulu_time_sec", DataRefType::Float},
-        {"sim/time/is_in_replay", DataRefType::Int, nullptr, 16, 1000},
-        {"sim/cockpit/radios/com1_freq_hz", DataRefType::Int, nullptr, 16, 1000},
-        {"sim/flightmodel/weight/m_fuel_total", DataRefType::Float, nullptr, 16, 25},
+        {"sim/time/is_in_replay", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
+        {"sim/cockpit/radios/com1_freq_hz", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
+        {"sim/flightmodel/weight/m_fuel_total", DataRefType::Float, nullptr, kDefaultScalarCount, kFrequentFrames},
         {"sim/flightmodel/failures/onground_all", DataRefType::Int},
         {"sim/flightmodel/failures/onground_any", DataRefType::Int},
-        {"sim/flightmodel2/engines/N2_percent", DataRefType::FloatArray, nullptr, 16},
-        {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, 10},
-        {"sim/aircraft/engine/acf_num_engines", DataRefType::Int, nullptr, 16, 1000},
-        {"sim/aircraft/view/acf_ICAO", DataRefType::ByteData, nullptr, 0, 1000},
+        {"sim/flightmodel2/engines/N2_percent", DataRefType::FloatArray, nullptr, kDefaultScalarCount},
+        {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, kGearArrayCount},
+        {"sim/aircraft/engine/acf_num_engines", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
+        {"sim/aircraft/view/acf_ICAO", DataRefType::ByteData, nullptr, 0, kRareFrames},
     };
 
     for (auto& item : items_) {
