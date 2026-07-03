@@ -15,7 +15,7 @@ This project recreates the connector behavior from scratch:
 
 ## Current Status
 
-Current internal version: `v0.3`.
+Current internal version: `v0.3.1`.
 
 Verified:
 
@@ -23,6 +23,7 @@ Verified:
 - the plugin opens a TCP server on `127.0.0.1:51303`;
 - SimToolkitPro connects and displays the aircraft on the map;
 - basic aircraft position and flight tracking were verified during a short flight;
+- SimToolkitPro landing report was verified after a short landing test;
 - Universal Binary build was verified with `lipo`.
 
 Known limitation:

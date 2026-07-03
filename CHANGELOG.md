@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.3.1 - Touchdown Reporting Stabilization
+
+### Changed
+
+- Increased update frequency for touchdown-critical DataRefs:
+  - `sim/flightmodel/failures/onground_all`
+  - `sim/flightmodel/failures/onground_any`
+  - `sim/flightmodel2/gear/on_ground`
+- Documented the SimToolkitPro startup warning shown when it validates the official plugin package on disk.
+- Documented that manual flight ending after X-Plane shutdown matches the original STKPConnector behavior.
+
+### Verified
+
+- SimToolkitPro aircraft tracking still works.
+- SimToolkitPro landing report is saved successfully.
+- Universal Binary build remains valid (`x86_64` + `arm64`).
+
 ## v0.3.0 - First Functional Baseline
 
 ### Added
@@ -30,5 +47,5 @@
 
 ### Known Limitations
 
-- Automatic flight ending in SimToolkitPro after X-Plane shutdown still needs investigation.
+- SimToolkitPro may require the flight to be ended manually from the flight log recorder after X-Plane shutdown; this matches the original STKPConnector behavior.
 - Release packaging is still manual.
