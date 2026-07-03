@@ -40,8 +40,11 @@ std::string base64Encode(const unsigned char* data, size_t size) {
 
 void DataRefs::initialize() {
     items_ = {
+        // Simulator state.
         {"sim/time/paused", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
         {"sim/time/sim_speed", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
+
+        // Aircraft position, speed, and attitude.
         {"sim/flightmodel/position/groundspeed", DataRefType::Float},
         {"sim/flightmodel/position/indicated_airspeed", DataRefType::Float, nullptr, kDefaultScalarCount, kVeryFrequentFrames},
         {"sim/flightmodel/position/true_airspeed", DataRefType::Float},
@@ -56,11 +59,15 @@ void DataRefs::initialize() {
         {"sim/flightmodel/position/psi", DataRefType::Float},
         {"sim/flightmodel/position/local_vy", DataRefType::Float},
         {"sim/flightmodel/forces/g_nrml", DataRefType::Float},
+
+        // Aircraft metadata and configuration.
         {"sim/aircraft/view/acf_descrip", DataRefType::ByteData, nullptr, 0, kRareFrames},
         {"sim/aircraft/parts/acf_gear_deploy", DataRefType::FloatArray, nullptr, kGearArrayCount, kRareFrames},
         {"sim/flightmodel/controls/flaprqst", DataRefType::Float, nullptr, kDefaultScalarCount, kFrequentFrames},
         {"sim/aircraft/controls/acf_flap_detents", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
         {"sim/operation/override/override_planepath", DataRefType::IntArray, nullptr, kOverrideArrayCount, kRareFrames},
+
+        // Local velocity and clock values used by STKP tracking.
         {"sim/flightmodel/position/local_vx", DataRefType::Float},
         {"sim/flightmodel/position/local_vz", DataRefType::Float},
         {"sim/time/local_time_sec", DataRefType::Float},
@@ -68,10 +75,14 @@ void DataRefs::initialize() {
         {"sim/time/is_in_replay", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
         {"sim/cockpit/radios/com1_freq_hz", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
         {"sim/flightmodel/weight/m_fuel_total", DataRefType::Float, nullptr, kDefaultScalarCount, kFrequentFrames},
+
+        // Landing and ground-contact state. These stay unthrottled for touchdown detection.
         {"sim/flightmodel/failures/onground_all", DataRefType::Int},
         {"sim/flightmodel/failures/onground_any", DataRefType::Int},
         {"sim/flightmodel2/engines/N2_percent", DataRefType::FloatArray, nullptr, kDefaultScalarCount},
         {"sim/flightmodel2/gear/on_ground", DataRefType::IntArray, nullptr, kGearArrayCount},
+
+        // Static aircraft identity.
         {"sim/aircraft/engine/acf_num_engines", DataRefType::Int, nullptr, kDefaultScalarCount, kRareFrames},
         {"sim/aircraft/view/acf_ICAO", DataRefType::ByteData, nullptr, 0, kRareFrames},
     };
