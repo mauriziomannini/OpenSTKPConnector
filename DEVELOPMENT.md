@@ -79,6 +79,22 @@ Architectures in the fat file: build-universal/mac.xpl are: x86_64 arm64
 
 The `POST_BUILD` step always copies the latest build output to `dist/OpenSTKPConnector/mac.xpl` and `dist/stkpconnector/mac.xpl`. After a Universal build, the files in `dist/` are Universal too.
 
+## Release Packaging
+
+Use the packaging script to create a Universal release ZIP:
+
+```bash
+scripts/package_release.sh v0.4.0
+```
+
+The script:
+
+- configures and builds `build-universal`;
+- verifies that `mac.xpl` contains both `x86_64` and `arm64`;
+- creates `release/OpenSTKPConnector-<version>-mac-universal/`;
+- creates `release/OpenSTKPConnector-<version>-mac-universal.zip`;
+- prints the ZIP SHA256.
+
 ## Port Test
 
 With X-Plane running:
@@ -121,7 +137,7 @@ The folder must be named `stkpconnector`, because STKP checks for the original p
 
 Check `X-Plane 12/Log.txt` for `[OpenSTKPConnector]` messages.
 
-## v0.3 Status
+## v0.3.1 Status
 
 Verified:
 
@@ -129,19 +145,23 @@ Verified:
 - TCP server listens on `127.0.0.1:51303`;
 - SimToolkitPro displays the aircraft on the map;
 - basic tracking works during a short flight;
+- SimToolkitPro landing report is saved successfully;
 - Universal Binary build works.
+
+Known behavior:
+
+- SimToolkitPro may show an update-required warning on startup because it validates the official plugin package on disk;
+- SimToolkitPro requires manual flight ending from the flight log recorder after X-Plane shutdown, matching the original plugin behavior.
 
 To investigate:
 
-- automatic flight ending in SimToolkitPro;
 - more precise handling of client reconnects;
 - possible DataRef set reduction after more real-world tests.
 
 ## Suggested Roadmap
 
-1. Keep v0.3 stable and reproducible.
-2. Tag the first functional release.
-3. Investigate automatic flight ending.
-4. Improve client connection handling if needed.
-5. Add configurable logging if needed.
-6. Prepare release artifacts for Universal Binary distribution.
+1. Keep v0.3.x stable and reproducible.
+2. Improve client connection handling if needed.
+3. Refine DataRef grouping and send frequency policy.
+4. Add configurable logging if needed.
+5. Keep release packaging reproducible.
