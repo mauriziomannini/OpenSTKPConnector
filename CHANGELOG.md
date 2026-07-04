@@ -10,6 +10,7 @@
 - Documented a successful full cold and dark flight test from KEEN to KDCA with the LevelUp 737-800NG.
 - Updated diagnostic log examples to match the current DataRef count.
 - Documented the intentional duplicate `sim/aircraft/parts/acf_gear_deploy` subscription in the STKP greeting.
+- Added explicit TCP disconnect reasons to improve reconnect diagnostics.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 

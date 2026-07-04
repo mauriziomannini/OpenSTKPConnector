@@ -20,6 +20,11 @@ constexpr std::size_t kMaxInputBufferBytes = 64 * 1024;
 bool startsWith(const std::string& value, const char* prefix) {
     return value.rfind(prefix, 0) == 0;
 }
+
+std::string disconnectReason(const std::string& reason) {
+    if (!reason.empty()) return reason;
+    return "unknown";
+}
 }
 
 namespace ostkp {
@@ -108,7 +113,7 @@ void TcpServer::acceptLoop() {
             const int subscription_count = clients_.front().subscription_count;
             ::close(clients_.front().fd);
             clients_.erase(clients_.begin());
-            log("client #" + std::to_string(oldest_id) + " disconnected (oldest); subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
+            log("client #" + std::to_string(oldest_id) + " disconnected; reason: client limit exceeded; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
         }
         clients_.push_back(Client{client, client_id});
         ++initial_snapshot_request_count_;
@@ -132,9 +137,10 @@ void TcpServer::pollClients() {
         if (!readClientInput(*it)) {
             const int client_id = it->id;
             const int subscription_count = it->subscription_count;
+            const std::string reason = disconnectReason(it->disconnect_reason);
             ::close(it->fd);
             it = clients_.erase(it);
-            log("client #" + std::to_string(client_id) + " disconnected; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
+            log("client #" + std::to_string(client_id) + " disconnected; reason: " + reason + "; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
         } else {
             ++it;
         }
@@ -150,7 +156,7 @@ bool TcpServer::readClientInput(Client& client) {
     const int ready = ::select(client.fd + 1, &read_set, nullptr, nullptr, &timeout);
     if (ready < 0) {
         if (errno == EINTR) return true;
-        log("select() failed: " + std::string(std::strerror(errno)));
+        client.disconnect_reason = "select failed: " + std::string(std::strerror(errno));
         return false;
     }
     if (ready == 0 || !FD_ISSET(client.fd, &read_set)) return true;
@@ -159,14 +165,17 @@ bool TcpServer::readClientInput(Client& client) {
     const ssize_t received = ::recv(client.fd, buffer, sizeof(buffer), 0);
     if (received < 0) {
         if (errno == EINTR) return true;
-        log("recv() failed: " + std::string(std::strerror(errno)));
+        client.disconnect_reason = "recv failed: " + std::string(std::strerror(errno));
         return false;
     }
-    if (received == 0) return false;
+    if (received == 0) {
+        client.disconnect_reason = "remote closed connection";
+        return false;
+    }
 
     client.input_buffer.append(buffer, static_cast<size_t>(received));
     if (client.input_buffer.size() > kMaxInputBufferBytes) {
-        log("client #" + std::to_string(client.id) + " disconnected; input buffer exceeded " + std::to_string(kMaxInputBufferBytes) + " bytes");
+        client.disconnect_reason = "input buffer exceeded " + std::to_string(kMaxInputBufferBytes) + " bytes";
         return false;
     }
 
@@ -241,9 +250,10 @@ void TcpServer::broadcast(const std::string& payload) {
         if (!sendAll(it->fd, payload)) {
             const int client_id = it->id;
             const int subscription_count = it->subscription_count;
+            const std::string reason = disconnectReason("send failed");
             ::close(it->fd);
             it = clients_.erase(it);
-            log("client #" + std::to_string(client_id) + " disconnected; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
+            log("client #" + std::to_string(client_id) + " disconnected; reason: " + reason + "; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
         } else {
             ++it;
         }

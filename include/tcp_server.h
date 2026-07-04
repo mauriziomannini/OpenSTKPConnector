@@ -25,6 +25,7 @@ private:
         int fd = -1;
         int id = 0;
         std::string input_buffer;
+        std::string disconnect_reason;
         bool handshake_logged = false;
         bool version_logged = false;
         bool has_subscription = false;
