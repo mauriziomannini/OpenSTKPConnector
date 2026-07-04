@@ -6,8 +6,11 @@
 
 #include <cstring>
 #include <memory>
+#include <string>
 
 namespace {
+constexpr const char* kPluginVersion = "v0.5-dev";
+
 std::unique_ptr<ostkp::TcpServer> g_server;
 ostkp::DataRefs g_datarefs;
 
@@ -26,7 +29,7 @@ PLUGIN_API int XPluginStart(char* outName, char* outSig, char* outDesc) {
     std::strcpy(outSig, "com.openstkp.connector");
     std::strcpy(outDesc, "Open Apple Silicon STKPConnector-compatible bridge for SimToolkitPro.");
 
-    ostkp::log("starting");
+    ostkp::log(std::string("starting ") + kPluginVersion);
     g_datarefs.initialize();
     g_server = std::make_unique<ostkp::TcpServer>(51303);
     g_server->start();
