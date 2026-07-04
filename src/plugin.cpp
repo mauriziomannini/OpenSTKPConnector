@@ -10,6 +10,7 @@
 
 namespace {
 constexpr const char* kPluginVersion = "v0.6-dev";
+constexpr float kFlightLoopIntervalSeconds = 0.05f;
 
 std::unique_ptr<ostkp::TcpServer> g_server;
 ostkp::DataRefs g_datarefs;
@@ -20,7 +21,7 @@ float flightLoopCallback(float, float, int, void*) {
         const bool force_full_frame = g_server->consumeInitialSnapshotRequestCount() > 0;
         g_server->broadcast(g_datarefs.buildFrame(force_full_frame));
     }
-    return 0.05f;
+    return kFlightLoopIntervalSeconds;
 }
 }
 

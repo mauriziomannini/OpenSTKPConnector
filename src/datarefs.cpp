@@ -10,7 +10,7 @@ namespace {
 constexpr int kDefaultScalarCount = 16;
 constexpr int kGearArrayCount = 10;
 constexpr int kOverrideArrayCount = 20;
-// These values are frame counts. With the current 0.05s flight loop interval,
+// These values are frame counts. With kFlightLoopIntervalSeconds currently at 0.05s,
 // 10 frames are about 0.5s, 25 frames about 1.25s, and 1000 frames about 50s.
 constexpr int kVeryFrequentFrames = 10;
 constexpr int kFrequentFrames = 25;

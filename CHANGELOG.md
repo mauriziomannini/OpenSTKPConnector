@@ -12,6 +12,7 @@
 - Documented the intentional duplicate `sim/aircraft/parts/acf_gear_deploy` subscription in the STKP greeting.
 - Added explicit TCP disconnect reasons to improve reconnect diagnostics.
 - Documented DataRef throttling intervals relative to the flight loop period.
+- Named the flight loop interval constant used by DataRef throttling documentation.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 
