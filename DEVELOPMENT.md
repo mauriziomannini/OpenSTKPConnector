@@ -159,6 +159,7 @@ Verified:
 - SimToolkitPro displays the aircraft on the map;
 - basic tracking works during a short flight;
 - SimToolkitPro landing report is saved successfully;
+- full cold and dark flight test from KEEN to KDCA with the LevelUp 737-800NG was tracked and recorded successfully, including landing report and associated screenshots;
 - protocol and DataRef refactors were verified with SimToolkitPro;
 - startup logs include the current development version;
 - Universal Binary build works.

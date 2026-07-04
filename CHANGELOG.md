@@ -7,6 +7,7 @@
 - Opened the next development cycle after `v0.5.0`.
 - Updated the development roadmap for the current project state.
 - Added a defensive TCP input buffer limit for malformed client input.
+- Documented a successful full cold and dark flight test from KEEN to KDCA with the LevelUp 737-800NG.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 
