@@ -15,7 +15,7 @@ This project recreates the connector behavior from scratch:
 
 ## Current Status
 
-Current internal version: `v0.3.1`.
+Current internal version: `v0.4.0`.
 
 Verified:
 
@@ -24,6 +24,7 @@ Verified:
 - SimToolkitPro connects and displays the aircraft on the map;
 - basic aircraft position and flight tracking were verified during a short flight;
 - SimToolkitPro landing report was verified after a short landing test;
+- STKP protocol and DataRef refactors were verified with SimToolkitPro;
 - Universal Binary build was verified with `lipo`.
 
 Known limitation:

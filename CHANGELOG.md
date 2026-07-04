@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.4.0 - Protocol and Packaging Cleanup
+
+### Added
+
+- Release packaging script:
+  - builds the Universal Binary;
+  - verifies `x86_64` and `arm64`;
+  - creates the release folder and ZIP;
+  - prints the ZIP SHA256.
+- Separate protocol module for the STKP greeting and advertised DataRef subscription list.
+
+### Changed
+
+- Moved STKP greeting construction out of the TCP server.
+- Named DataRef send-policy constants to make update frequencies easier to understand.
+- Added inline DataRef group documentation.
+- Updated architecture documentation for the protocol module.
+- Improved GitHub release note formatting.
+
+### Verified
+
+- SimToolkitPro aircraft tracking still works after the protocol and DataRef refactors.
+- Universal Binary build remains valid (`x86_64` + `arm64`).
+
 ## v0.3.1 - Touchdown Reporting Stabilization
 
 ### Changed
