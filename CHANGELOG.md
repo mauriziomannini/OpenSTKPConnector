@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased - v0.5-dev
+
+### Changed
+
+- Added plugin version logging at startup to make `X-Plane 12/Log.txt` checks clearer during development and testing.
+
 ## v0.4.0 - Protocol and Packaging Cleanup
 
 ### Added

@@ -84,7 +84,7 @@ The `POST_BUILD` step always copies the latest build output to `dist/OpenSTKPCon
 Use the packaging script to create a Universal release ZIP:
 
 ```bash
-scripts/package_release.sh v0.4.0
+scripts/package_release.sh v0.x.y
 ```
 
 The script:
@@ -137,7 +137,7 @@ The folder must be named `stkpconnector`, because STKP checks for the original p
 
 Check `X-Plane 12/Log.txt` for `[OpenSTKPConnector]` messages.
 
-## v0.3.1 Status
+## Current Development Status
 
 Verified:
 
@@ -146,6 +146,8 @@ Verified:
 - SimToolkitPro displays the aircraft on the map;
 - basic tracking works during a short flight;
 - SimToolkitPro landing report is saved successfully;
+- protocol and DataRef refactors were verified with SimToolkitPro;
+- startup logs include the current development version;
 - Universal Binary build works.
 
 Known behavior:
