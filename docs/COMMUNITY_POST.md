@@ -1,5 +1,42 @@
 # Suggested Community Post
 
+## Discord Short Version
+
+```text
+Hi everyone,
+
+I’m working on OpenSTKPConnector, an open-source macOS X-Plane 12 plugin that acts as a SimToolkitPro-compatible replacement for the original STKPConnector plugin.
+
+The goal is mainly Apple Silicon support: the original connector is Intel-only, so it does not load when X-Plane 12 runs natively on Apple Silicon. OpenSTKPConnector is built as a Universal macOS plugin (arm64 + x86_64).
+
+GitHub:
+https://github.com/mauriziomannini/OpenSTKPConnector
+
+Latest release:
+https://github.com/mauriziomannini/OpenSTKPConnector/releases/tag/v0.6.0
+
+Current status:
+- X-Plane 12 native Apple Silicon loads correctly
+- SimToolkitPro connects and tracks the aircraft
+- Landing reports work
+- Screenshot association works
+- Full cold & dark test flight KEEN -> KDCA with LevelUp 737-800NG completed successfully
+
+Install:
+Copy the included stkpconnector folder to:
+
+X-Plane 12/Resources/plugins/
+
+Final path:
+
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
+
+Notes:
+This is a public beta/community preview and is not affiliated with or supported by SimToolkitPro.
+
+Testing and feedback are welcome, especially from Apple Silicon, Intel Mac, Rosetta, and different aircraft setups.
+```
+
 ## Suggested Title
 
 OpenSTKPConnector - native Apple Silicon replacement for the SimToolkitPro X-Plane connector

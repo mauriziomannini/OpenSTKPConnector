@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Added a short Discord-ready version of the community announcement.
 - Added public beta/community preview wording and a suggested community announcement post.
 - Opened the next development cycle after `v0.5.0` and prepared the `v0.6.0` hardening release.
 - Updated the development roadmap for the current project state.
