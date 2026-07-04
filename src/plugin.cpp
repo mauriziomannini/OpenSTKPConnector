@@ -9,7 +9,7 @@
 #include <string>
 
 namespace {
-constexpr const char* kPluginVersion = "v0.5.0";
+constexpr const char* kPluginVersion = "v0.6-dev";
 
 std::unique_ptr<ostkp::TcpServer> g_server;
 ostkp::DataRefs g_datarefs;

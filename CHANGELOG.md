@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased - v0.6-dev
+
+### Changed
+
+- Opened the next development cycle after `v0.5.0`.
+- Updated the development roadmap for the current project state.
+
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 
 ### Changed

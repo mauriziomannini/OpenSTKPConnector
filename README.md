@@ -15,7 +15,7 @@ This project recreates the connector behavior from scratch:
 
 ## Current Status
 
-Current internal version: `v0.5.0`.
+Current internal version: `v0.6-dev`.
 
 Verified:
 
@@ -127,7 +127,7 @@ Close X-Plane before replacing `mac.xpl`.
 When X-Plane starts, `X-Plane 12/Log.txt` should contain lines similar to:
 
 ```text
-[OpenSTKPConnector] starting v0.5.0
+[OpenSTKPConnector] starting v0.6-dev
 [OpenSTKPConnector] DataRefs initialized: 33; found: 33; missing: 0
 [OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
 [OpenSTKPConnector] client #1 connected; active clients: 1
