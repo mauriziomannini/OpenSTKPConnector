@@ -54,10 +54,7 @@ target_link_options(OpenSTKPConnector PRIVATE
 
 add_custom_command(TARGET OpenSTKPConnector POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory
-        "${CMAKE_SOURCE_DIR}/dist/OpenSTKPConnector"
         "${CMAKE_SOURCE_DIR}/dist/stkpconnector"
-    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:OpenSTKPConnector>"
-        "${CMAKE_SOURCE_DIR}/dist/OpenSTKPConnector/mac.xpl"
     COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:OpenSTKPConnector>"
         "${CMAKE_SOURCE_DIR}/dist/stkpconnector/mac.xpl"
 )

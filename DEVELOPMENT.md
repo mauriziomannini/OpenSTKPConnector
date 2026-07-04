@@ -51,7 +51,6 @@ cmake --build build
 The build automatically copies the plugin to:
 
 ```text
-dist/OpenSTKPConnector/mac.xpl
 dist/stkpconnector/mac.xpl
 ```
 
@@ -77,7 +76,7 @@ Expected output:
 Architectures in the fat file: build-universal/mac.xpl are: x86_64 arm64
 ```
 
-The `POST_BUILD` step always copies the latest build output to `dist/OpenSTKPConnector/mac.xpl` and `dist/stkpconnector/mac.xpl`. After a Universal build, the files in `dist/` are Universal too.
+The `POST_BUILD` step always copies the latest build output to `dist/stkpconnector/mac.xpl`. After a Universal build, this file is Universal too.
 
 ## Release Packaging
 

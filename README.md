@@ -103,11 +103,10 @@ Expected outputs:
 
 ```text
 build/mac.xpl
-dist/OpenSTKPConnector/mac.xpl
 dist/stkpconnector/mac.xpl
 ```
 
-Note: `dist/` is updated by the last build that ran. After a Universal build, `dist/stkpconnector/mac.xpl` is Universal.
+Note: `dist/stkpconnector/mac.xpl` is updated by the last build that ran. After a Universal build, this file is Universal.
 
 Use this file for SimToolkitPro testing:
 

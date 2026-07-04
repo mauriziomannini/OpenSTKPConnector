@@ -9,6 +9,7 @@
 - Added DataRef initialization summary logging.
 - Updated manual testing documentation with current diagnostic log examples.
 - Made TCP disconnect diagnostics consistent when the oldest client is dropped.
+- Simplified build output to only create the SimToolkitPro-compatible `dist/stkpconnector/mac.xpl` path.
 
 ## v0.4.0 - Protocol and Packaging Cleanup
 
