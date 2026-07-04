@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased - v0.5-dev
+## v0.5.0 - Diagnostic and Build Output Cleanup
 
 ### Changed
 

@@ -141,7 +141,7 @@ Check `X-Plane 12/Log.txt` for `[OpenSTKPConnector]` messages.
 During manual testing, useful `X-Plane 12/Log.txt` lines include:
 
 ```text
-[OpenSTKPConnector] starting v0.5-dev
+[OpenSTKPConnector] starting v0.5.0
 [OpenSTKPConnector] DataRefs initialized: 33; found: 33; missing: 0
 [OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
 [OpenSTKPConnector] client #1 connected; active clients: 1
