@@ -9,7 +9,7 @@
 #include <string>
 
 namespace {
-constexpr const char* kPluginVersion = "v0.6.0";
+constexpr const char* kPluginVersion = "v0.7-dev";
 constexpr float kFlightLoopIntervalSeconds = 0.05f;
 
 std::unique_ptr<ostkp::TcpServer> g_server;

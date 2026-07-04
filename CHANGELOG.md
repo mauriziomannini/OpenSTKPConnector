@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - v0.7-dev
+
+### Changed
+
+- Opened the next development cycle after `v0.6.0`.
+- Improved README installation, update, and troubleshooting guidance for public beta users.
+- Reordered README sections to prioritize release ZIP installation before source builds.
+
 ## v0.6.0 - Hardening and Validation
 
 ### Changed

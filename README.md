@@ -15,7 +15,7 @@ This project recreates the connector behavior from scratch:
 
 ## Current Status
 
-Current internal version: `v0.6.0`.
+Current internal version: `v0.7-dev`.
 
 OpenSTKPConnector is currently a public beta / community preview. It is not affiliated with, endorsed by, or supported by SimToolkitPro.
 
@@ -64,13 +64,121 @@ The original plugin archive may be kept locally under `docs/OriginalPlugin/`, bu
 ## Requirements
 
 - macOS
+- X-Plane 12
+- SimToolkitPro
+
+For users installing a release ZIP, no build tools are required.
+
+For developers building from source:
+
 - Xcode Command Line Tools
 - CMake
 - Ninja recommended
 - Visual Studio Code recommended
 - X-Plane SDK
 
+## Download
+
+Download the latest release ZIP from:
+
+```text
+https://github.com/mauriziomannini/OpenSTKPConnector/releases
+```
+
+The release asset is named like:
+
+```text
+OpenSTKPConnector-vX.Y.Z-mac-universal.zip
+```
+
+The ZIP contains a ready-to-install `stkpconnector` folder.
+
+## Installation From Release ZIP
+
+1. Close X-Plane 12.
+2. Download and unzip the latest release asset.
+3. Copy the included `stkpconnector` folder to:
+
+```text
+X-Plane 12/Resources/plugins/
+```
+
+The final path must be:
+
+```text
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
+```
+
+SimToolkitPro checks for the original plugin folder name, so the folder must be named `stkpconnector`.
+
+## Updating From A Previous Version
+
+1. Close X-Plane 12.
+2. Replace the existing:
+
+```text
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
+```
+
+with the new `mac.xpl` from the release ZIP.
+
+If you prefer, you can replace the whole `stkpconnector` folder with the one from the ZIP.
+
+## Verifying Installation
+
+When X-Plane starts, `X-Plane 12/Log.txt` should contain lines similar to:
+
+```text
+[OpenSTKPConnector] starting v0.7-dev
+[OpenSTKPConnector] DataRefs initialized: 34; found: 34; missing: 0
+[OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
+[OpenSTKPConnector] client #1 connected; active clients: 1
+[OpenSTKPConnector] client #1 protocol greeting sent
+[OpenSTKPConnector] client #1 first subscription received: sim/time/paused
+[OpenSTKPConnector] client #1 subscriptions received: 25
+```
+
+## Quick Test
+
+With X-Plane running:
+
+```bash
+lsof -nP -iTCP:51303
+nc 127.0.0.1 51303
+```
+
+## Troubleshooting
+
+### SimToolkitPro shows "X-Plane Plugin update is required"
+
+SimToolkitPro may show this warning when it starts, even before X-Plane is launched. This appears to be related to SimToolkitPro validating the official plugin package on disk.
+
+This warning does not necessarily mean OpenSTKPConnector failed. Start X-Plane and check whether SimToolkitPro connects and tracks the aircraft.
+
+### Aircraft does not appear in SimToolkitPro
+
+Check `X-Plane 12/Log.txt` for:
+
+```text
+[OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
+[OpenSTKPConnector] client #1 connected; active clients: 1
+[OpenSTKPConnector] client #1 protocol greeting sent
+[OpenSTKPConnector] client #1 first subscription received: sim/time/paused
+```
+
+If these lines are missing, verify that `mac.xpl` is installed at:
+
+```text
+X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
+```
+
+### Flight does not end automatically after closing X-Plane
+
+This matches the behavior observed with the original STKPConnector plugin. End the flight manually from the SimToolkitPro flight log recorder.
+
 ## X-Plane SDK
+
+This section is only needed when building from source.
 
 Set:
 
@@ -123,37 +231,6 @@ Use this file for SimToolkitPro testing:
 
 ```text
 dist/stkpconnector/mac.xpl
-```
-
-## Installation
-
-SimToolkitPro checks for the original plugin folder name. For compatibility, install OpenSTKPConnector as:
-
-```text
-X-Plane 12/Resources/plugins/stkpconnector/mac.xpl
-```
-
-Close X-Plane before replacing `mac.xpl`.
-
-When X-Plane starts, `X-Plane 12/Log.txt` should contain lines similar to:
-
-```text
-[OpenSTKPConnector] starting v0.6.0
-[OpenSTKPConnector] DataRefs initialized: 34; found: 34; missing: 0
-[OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
-[OpenSTKPConnector] client #1 connected; active clients: 1
-[OpenSTKPConnector] client #1 protocol greeting sent
-[OpenSTKPConnector] client #1 first subscription received: sim/time/paused
-[OpenSTKPConnector] client #1 subscriptions received: 25
-```
-
-## Quick Test
-
-With X-Plane running:
-
-```bash
-lsof -nP -iTCP:51303
-nc 127.0.0.1 51303
 ```
 
 ## Protocol Summary
