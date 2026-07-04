@@ -104,9 +104,10 @@ void TcpServer::acceptLoop() {
         std::lock_guard<std::mutex> lock(clients_mutex_);
         while (clients_.size() >= kMaxClients) {
             const int oldest_id = clients_.front().id;
+            const int subscription_count = clients_.front().subscription_count;
             ::close(clients_.front().fd);
             clients_.erase(clients_.begin());
-            log("client #" + std::to_string(oldest_id) + " disconnected (oldest); active clients: " + std::to_string(clients_.size()));
+            log("client #" + std::to_string(oldest_id) + " disconnected (oldest); subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
         }
         clients_.push_back(Client{client, client_id});
         ++initial_snapshot_request_count_;

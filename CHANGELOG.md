@@ -8,6 +8,7 @@
 - Added TCP subscription diagnostics to make SimToolkitPro connection debugging easier.
 - Added DataRef initialization summary logging.
 - Updated manual testing documentation with current diagnostic log examples.
+- Made TCP disconnect diagnostics consistent when the oldest client is dropped.
 
 ## v0.4.0 - Protocol and Packaging Cleanup
 
