@@ -27,6 +27,7 @@ Verified:
 - basic aircraft position and flight tracking were verified during a short flight;
 - SimToolkitPro landing report was verified after a short landing test;
 - a full cold and dark flight from KEEN to KDCA with the LevelUp 737-800NG was tracked and recorded correctly, including landing report and associated screenshots;
+- a full flight from LIRP to LIRQ with the Laminar Cessna C172 was tracked and recorded correctly;
 - STKP protocol and DataRef refactors were verified with SimToolkitPro;
 - Universal Binary build was verified with `lipo`.
 

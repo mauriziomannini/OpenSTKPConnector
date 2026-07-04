@@ -7,6 +7,7 @@
 - Opened the next development cycle after `v0.6.0` and prepared the `v0.7.0` documentation and installation polish release.
 - Improved README installation, update, and troubleshooting guidance for public beta users.
 - Reordered README sections to prioritize release ZIP installation before source builds.
+- Documented a successful full flight test from LIRP to LIRQ with the Laminar Cessna C172.
 
 ## v0.6.0 - Hardening and Validation
 

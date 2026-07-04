@@ -21,6 +21,7 @@ Current status:
 - Landing reports work
 - Screenshot association works
 - Full cold & dark test flight KEEN -> KDCA with LevelUp 737-800NG completed successfully
+- Full flight LIRP -> LIRQ with Laminar Cessna C172 completed successfully
 
 Install:
 Copy the included stkpconnector folder to:
@@ -65,6 +66,7 @@ Current status:
 - Landing report saving works.
 - Screenshot association works.
 - A full cold and dark flight from KEEN to KDCA with the LevelUp 737-800NG was tracked and recorded successfully.
+- A full flight from LIRP to LIRQ with the Laminar Cessna C172 was tracked and recorded successfully.
 - The release ZIP contains a Universal macOS `mac.xpl` binary.
 
 Installation summary:
