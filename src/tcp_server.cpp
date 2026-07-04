@@ -129,9 +129,10 @@ void TcpServer::pollClients() {
     for (auto it = clients_.begin(); it != clients_.end();) {
         if (!readClientInput(*it)) {
             const int client_id = it->id;
+            const int subscription_count = it->subscription_count;
             ::close(it->fd);
             it = clients_.erase(it);
-            log("client #" + std::to_string(client_id) + " disconnected; active clients: " + std::to_string(clients_.size()));
+            log("client #" + std::to_string(client_id) + " disconnected; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
         } else {
             ++it;
         }
@@ -199,6 +200,9 @@ void TcpServer::handleClientLine(Client& client, std::string line) {
         if (!client.has_subscription) {
             client.has_subscription = true;
             ++initial_snapshot_request_count_;
+            log("client #" + std::to_string(client.id) + " first subscription received: " + line.substr(std::strlen("sub ")));
+        } else if (client.subscription_count % 25 == 0) {
+            log("client #" + std::to_string(client.id) + " subscriptions received: " + std::to_string(client.subscription_count));
         }
         return;
     }
@@ -230,9 +234,10 @@ void TcpServer::broadcast(const std::string& payload) {
     for (auto it = clients_.begin(); it != clients_.end();) {
         if (!sendAll(it->fd, payload)) {
             const int client_id = it->id;
+            const int subscription_count = it->subscription_count;
             ::close(it->fd);
             it = clients_.erase(it);
-            log("client #" + std::to_string(client_id) + " disconnected; active clients: " + std::to_string(clients_.size()));
+            log("client #" + std::to_string(client_id) + " disconnected; subscriptions received: " + std::to_string(subscription_count) + "; active clients: " + std::to_string(clients_.size()));
         } else {
             ++it;
         }
