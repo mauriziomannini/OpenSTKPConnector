@@ -137,6 +137,20 @@ The folder must be named `stkpconnector`, because STKP checks for the original p
 
 Check `X-Plane 12/Log.txt` for `[OpenSTKPConnector]` messages.
 
+## Useful Log Lines
+
+During manual testing, useful `X-Plane 12/Log.txt` lines include:
+
+```text
+[OpenSTKPConnector] starting v0.5-dev
+[OpenSTKPConnector] DataRefs initialized: 33; found: 33; missing: 0
+[OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
+[OpenSTKPConnector] client #1 connected; active clients: 1
+[OpenSTKPConnector] client #1 protocol greeting sent
+[OpenSTKPConnector] client #1 first subscription received: sim/time/paused
+[OpenSTKPConnector] client #1 subscriptions received: 25
+```
+
 ## Current Development Status
 
 Verified:

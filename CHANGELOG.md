@@ -7,6 +7,7 @@
 - Added plugin version logging at startup to make `X-Plane 12/Log.txt` checks clearer during development and testing.
 - Added TCP subscription diagnostics to make SimToolkitPro connection debugging easier.
 - Added DataRef initialization summary logging.
+- Updated manual testing documentation with current diagnostic log examples.
 
 ## v0.4.0 - Protocol and Packaging Cleanup
 
