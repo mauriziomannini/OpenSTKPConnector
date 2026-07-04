@@ -90,6 +90,14 @@ The current flight loop callback runs every `0.05s`, approximately 20 Hz.
 
 High-frequency flight position values are sent every frame. Lower-frequency or mostly static values are throttled and forced into the initial snapshot.
 
+Current throttling constants:
+
+| Constant | Frames | Approximate interval |
+| --- | ---: | ---: |
+| `kVeryFrequentFrames` | 10 | 0.5s |
+| `kFrequentFrames` | 25 | 1.25s |
+| `kRareFrames` | 1000 | 50s |
+
 ## Plugin Output
 
 The binary must be named:

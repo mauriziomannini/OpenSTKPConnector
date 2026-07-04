@@ -11,6 +11,7 @@
 - Updated diagnostic log examples to match the current DataRef count.
 - Documented the intentional duplicate `sim/aircraft/parts/acf_gear_deploy` subscription in the STKP greeting.
 - Added explicit TCP disconnect reasons to improve reconnect diagnostics.
+- Documented DataRef throttling intervals relative to the flight loop period.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 
