@@ -6,6 +6,7 @@
 
 - Opened the next development cycle after `v0.5.0`.
 - Updated the development roadmap for the current project state.
+- Added a defensive TCP input buffer limit for malformed client input.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 

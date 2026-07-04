@@ -15,6 +15,7 @@
 
 namespace {
 constexpr std::size_t kMaxClients = 8;
+constexpr std::size_t kMaxInputBufferBytes = 64 * 1024;
 
 bool startsWith(const std::string& value, const char* prefix) {
     return value.rfind(prefix, 0) == 0;
@@ -164,6 +165,10 @@ bool TcpServer::readClientInput(Client& client) {
     if (received == 0) return false;
 
     client.input_buffer.append(buffer, static_cast<size_t>(received));
+    if (client.input_buffer.size() > kMaxInputBufferBytes) {
+        log("client #" + std::to_string(client.id) + " disconnected; input buffer exceeded " + std::to_string(kMaxInputBufferBytes) + " bytes");
+        return false;
+    }
 
     size_t newline = std::string::npos;
     while ((newline = client.input_buffer.find('\n')) != std::string::npos) {
