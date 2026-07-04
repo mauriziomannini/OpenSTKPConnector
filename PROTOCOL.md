@@ -31,6 +31,8 @@ sub <dataref>
 
 OpenSTKPConnector sends this greeting immediately after accepting a TCP client. Native Apple Silicon testing showed that SimToolkitPro starts tracking only when this greeting is sent before the first DataRef snapshot.
 
+The GoldenFlight reference greeting contains `sim/aircraft/parts/acf_gear_deploy` twice. OpenSTKPConnector preserves that duplicate subscription in the greeting for compatibility with the observed stream, but the DataRef manager resolves and reads the DataRef only once. This is why the greeting can contain 35 `sub` lines while the runtime log reports 34 initialized DataRefs.
+
 Examples:
 
 ```text

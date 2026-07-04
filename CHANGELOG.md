@@ -9,6 +9,7 @@
 - Added a defensive TCP input buffer limit for malformed client input.
 - Documented a successful full cold and dark flight test from KEEN to KDCA with the LevelUp 737-800NG.
 - Updated diagnostic log examples to match the current DataRef count.
+- Documented the intentional duplicate `sim/aircraft/parts/acf_gear_deploy` subscription in the STKP greeting.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 

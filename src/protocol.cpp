@@ -29,6 +29,8 @@ constexpr const char* kProtocolSubscriptions[] = {
     "sim/operation/override/override_planepath",
     "sim/flightmodel/position/local_vx",
     "sim/flightmodel/position/local_vz",
+    // GoldenFlight includes this subscription twice. Keep the duplicate in the greeting
+    // for compatibility, while the DataRef manager reads it only once.
     "sim/aircraft/parts/acf_gear_deploy",
     "sim/time/local_time_sec",
     "sim/time/zulu_time_sec",
