@@ -17,6 +17,8 @@ This project recreates the connector behavior from scratch:
 
 Current internal version: `v0.6.0`.
 
+OpenSTKPConnector is currently a public beta / community preview. It is not affiliated with, endorsed by, or supported by SimToolkitPro.
+
 Verified:
 
 - X-Plane 12 loads the plugin in native Apple Silicon mode;
@@ -27,6 +29,14 @@ Verified:
 - a full cold and dark flight from KEEN to KDCA with the LevelUp 737-800NG was tracked and recorded correctly, including landing report and associated screenshots;
 - STKP protocol and DataRef refactors were verified with SimToolkitPro;
 - Universal Binary build was verified with `lipo`.
+
+Community testing is welcome, especially with:
+
+- other Apple Silicon Macs;
+- Intel Macs;
+- X-Plane 12 under Rosetta;
+- additional aircraft;
+- longer full-flight profiles.
 
 Known limitation:
 
