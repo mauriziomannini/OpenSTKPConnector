@@ -87,11 +87,21 @@ void DataRefs::initialize() {
         {"sim/aircraft/view/acf_ICAO", DataRefType::ByteData, nullptr, 0, kRareFrames},
     };
 
+    int found_count = 0;
+    int missing_count = 0;
+
     for (auto& item : items_) {
         item.ref = XPLMFindDataRef(item.name.c_str());
-        if (!item.ref) log("DataRef not found: " + item.name);
+        if (item.ref) {
+            ++found_count;
+        } else {
+            ++missing_count;
+            log("DataRef not found: " + item.name);
+        }
     }
-    log("DataRefs initialized: " + std::to_string(items_.size()));
+    log("DataRefs initialized: " + std::to_string(items_.size()) +
+        "; found: " + std::to_string(found_count) +
+        "; missing: " + std::to_string(missing_count));
 }
 
 std::string DataRefs::buildFrame(bool force_all) {
