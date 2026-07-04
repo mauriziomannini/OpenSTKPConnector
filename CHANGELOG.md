@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased - v0.7-dev
+## v0.7.0 - Installation and Troubleshooting Polish
 
 ### Changed
 
-- Opened the next development cycle after `v0.6.0`.
+- Opened the next development cycle after `v0.6.0` and prepared the `v0.7.0` documentation and installation polish release.
 - Improved README installation, update, and troubleshooting guidance for public beta users.
 - Reordered README sections to prioritize release ZIP installation before source builds.
 
