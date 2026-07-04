@@ -141,7 +141,7 @@ Check `X-Plane 12/Log.txt` for `[OpenSTKPConnector]` messages.
 During manual testing, useful `X-Plane 12/Log.txt` lines include:
 
 ```text
-[OpenSTKPConnector] starting v0.6-dev
+[OpenSTKPConnector] starting v0.6.0
 [OpenSTKPConnector] DataRefs initialized: 34; found: 34; missing: 0
 [OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
 [OpenSTKPConnector] client #1 connected; active clients: 1
@@ -176,7 +176,7 @@ To investigate:
 
 ## Suggested Roadmap
 
-1. Keep `v0.5.0` stable and reproducible.
+1. Keep `v0.6.0` stable and reproducible.
 2. Improve client reconnect handling if real tests show issues.
 3. Refine DataRef send policy after more real-world flights.
 4. Add configurable logging only if diagnostics become too noisy.

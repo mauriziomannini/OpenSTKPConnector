@@ -86,7 +86,7 @@ Responsibilities:
 
 ## Send Frequency
 
-The current flight loop callback runs every `0.05s`, approximately 20 Hz.
+The flight loop interval is defined by `kFlightLoopIntervalSeconds` in `src/plugin.cpp`. It currently runs every `0.05s`, approximately 20 Hz.
 
 High-frequency flight position values are sent every frame. Lower-frequency or mostly static values are throttled and forced into the initial snapshot.
 

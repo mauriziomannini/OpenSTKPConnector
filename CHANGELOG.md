@@ -1,10 +1,10 @@
 # Changelog
 
-## Unreleased - v0.6-dev
+## v0.6.0 - Hardening and Validation
 
 ### Changed
 
-- Opened the next development cycle after `v0.5.0`.
+- Opened the next development cycle after `v0.5.0` and prepared the `v0.6.0` hardening release.
 - Updated the development roadmap for the current project state.
 - Added a defensive TCP input buffer limit for malformed client input.
 - Documented a successful full cold and dark flight test from KEEN to KDCA with the LevelUp 737-800NG.
@@ -13,6 +13,7 @@
 - Added explicit TCP disconnect reasons to improve reconnect diagnostics.
 - Documented DataRef throttling intervals relative to the flight loop period.
 - Named the flight loop interval constant used by DataRef throttling documentation.
+- Updated architecture documentation to reference the named flight loop interval constant.
 
 ## v0.5.0 - Diagnostic and Build Output Cleanup
 
