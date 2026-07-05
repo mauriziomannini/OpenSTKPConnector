@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased - v0.8-dev
+
+### Changed
+
+- Opened the next development cycle after `v0.7.0`.
+- Added a compatibility validation matrix for supported platforms, tested aircraft, and known SimToolkitPro behaviors.
+- Updated community announcement release links to the latest public beta.
+
 ## v0.7.0 - Installation and Troubleshooting Polish
 
 ### Changed
