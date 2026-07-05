@@ -218,6 +218,6 @@ To investigate:
 1. Keep `v0.8.0` stable as the current public beta baseline.
 2. Use `v0.9-dev` for the final validation work listed in [`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md).
 3. Gather Intel Mac and Rosetta validation, or document them as community-provided before `v1.0`.
-4. Run at least one reconnect test with SimToolkitPro restarted while X-Plane remains open.
-5. Run one final full-flight test with the latest pre-`v1.0` build.
+4. Run at least one reconnect test with SimToolkitPro restarted while X-Plane remains open, using [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md).
+5. Run one final full-flight test with the latest pre-`v1.0` build, using [`docs/TEST_PLAN.md`](docs/TEST_PLAN.md).
 6. Keep DataRef tuning and configurable logging as post-`v1.0` work unless real tests show a concrete blocker.

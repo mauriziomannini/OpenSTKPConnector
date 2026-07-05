@@ -58,8 +58,8 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 - At least one Intel Mac validation report, or a clearly documented reason why Intel validation remains community-provided.
 - At least one X-Plane 12 Rosetta validation report using OpenSTKPConnector, or a clearly documented reason why Rosetta validation remains community-provided.
 - At least one additional aircraft validation beyond the current LevelUp 737-800NG and Laminar C172 tests.
-- One reconnect test where SimToolkitPro is restarted while X-Plane keeps running.
-- One final full-flight test with the latest pre-`v1.0` build.
+- One reconnect test where SimToolkitPro is restarted while X-Plane keeps running, following [`TEST_PLAN.md`](TEST_PLAN.md).
+- One final full-flight test with the latest pre-`v1.0` build, following [`TEST_PLAN.md`](TEST_PLAN.md).
 
 ### Post-v1.0 Nice-To-Have
 

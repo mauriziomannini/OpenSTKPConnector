@@ -6,6 +6,7 @@
 
 - Opened the next development cycle after `v0.8.0`.
 - Added a `v1.0` readiness checklist to focus final validation work.
+- Added a manual test plan for reconnect and final pre-`v1.0` full-flight validation.
 
 ## v0.8.0 - Release Hardening and Compatibility Checks
 
