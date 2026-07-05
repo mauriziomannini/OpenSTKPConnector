@@ -23,6 +23,7 @@ BUILD_DIR="${ROOT_DIR}/build-universal"
 RELEASE_NAME="OpenSTKPConnector-v${VERSION}-mac-universal"
 RELEASE_DIR="${ROOT_DIR}/release/${RELEASE_NAME}"
 ZIP_PATH="${ROOT_DIR}/release/${RELEASE_NAME}.zip"
+RELEASE_NOTES_PATH="${ROOT_DIR}/release/OpenSTKPConnector-v${VERSION}-release-notes.md"
 PLUGIN_PATH="${BUILD_DIR}/mac.xpl"
 PLUGIN_SOURCE_PATH="${ROOT_DIR}/src/plugin.cpp"
 EXPECTED_PLUGIN_VERSION="v${VERSION}"
@@ -70,7 +71,7 @@ if [[ "${LIPO_OUTPUT}" != *"x86_64"* || "${LIPO_OUTPUT}" != *"arm64"* ]]; then
     exit 1
 fi
 
-rm -rf "${RELEASE_DIR}" "${ZIP_PATH}"
+rm -rf "${RELEASE_DIR}" "${ZIP_PATH}" "${RELEASE_NOTES_PATH}"
 mkdir -p "${RELEASE_DIR}/stkpconnector"
 cp "${PLUGIN_PATH}" "${RELEASE_DIR}/stkpconnector/mac.xpl"
 
@@ -109,9 +110,48 @@ EOF
     zip -r "${RELEASE_NAME}.zip" "${RELEASE_NAME}"
 )
 
+SHA256="$(shasum -a 256 "${ZIP_PATH}" | awk '{print $1}')"
+
+cat > "${RELEASE_NOTES_PATH}" <<EOF
+## OpenSTKPConnector v${VERSION}
+
+Universal macOS X-Plane 12 plugin for SimToolkitPro compatibility.
+
+### Asset
+
+- \`${RELEASE_NAME}.zip\`
+- SHA256: \`${SHA256}\`
+
+### Installation
+
+1. Close X-Plane 12.
+2. Download and unzip \`${RELEASE_NAME}.zip\`.
+3. Copy the included \`stkpconnector\` folder to:
+
+   \`X-Plane 12/Resources/plugins/\`
+
+4. The final path must be:
+
+   \`X-Plane 12/Resources/plugins/stkpconnector/mac.xpl\`
+
+5. Start X-Plane 12 and SimToolkitPro.
+
+### Known Behavior
+
+- SimToolkitPro may show an "X-Plane Plugin update is required" warning when SimToolkitPro starts. Tracking can still work once X-Plane loads OpenSTKPConnector.
+- SimToolkitPro requires the flight to be ended manually from the flight log recorder after X-Plane is closed. This matches the original STKPConnector behavior.
+
+EOF
+
 echo
 echo "Release ZIP:"
 echo "${ZIP_PATH}"
 echo
+echo "Release notes:"
+echo "${RELEASE_NOTES_PATH}"
+echo
 echo "SHA256:"
-shasum -a 256 "${ZIP_PATH}"
+echo "${SHA256}  ${ZIP_PATH}"
+echo
+echo "GitHub release command:"
+echo "gh release create v${VERSION} \"${ZIP_PATH}\" --title \"OpenSTKPConnector v${VERSION}\" --notes-file \"${RELEASE_NOTES_PATH}\""

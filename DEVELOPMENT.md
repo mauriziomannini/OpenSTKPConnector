@@ -94,6 +94,7 @@ The script:
 - verifies that `mac.xpl` contains both `x86_64` and `arm64`;
 - creates `release/OpenSTKPConnector-<version>-mac-universal/`;
 - creates `release/OpenSTKPConnector-<version>-mac-universal.zip`;
+- creates `release/OpenSTKPConnector-<version>-release-notes.md`;
 - prints the ZIP SHA256.
 
 Before creating a release package, update:
@@ -104,6 +105,15 @@ Before creating a release package, update:
 - `CHANGELOG.md`
 
 from the development version, for example `v0.8-dev`, to the final release version, for example `v0.8.0`.
+
+Use the generated Markdown file when creating the GitHub release. This avoids passing release notes as a quoted shell string with visible `\n` sequences:
+
+```bash
+gh release create v0.x.y \
+  release/OpenSTKPConnector-v0.x.y-mac-universal.zip \
+  --title "OpenSTKPConnector v0.x.y" \
+  --notes-file release/OpenSTKPConnector-v0.x.y-release-notes.md
+```
 
 ## Port Test
 

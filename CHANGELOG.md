@@ -9,6 +9,7 @@
 - Updated community announcement release links to the latest public beta.
 - Added release packaging guards to prevent version mismatch between release ZIP names and the plugin log version.
 - Converted remaining CMake fatal error messages to English.
+- Added generated Markdown release notes to prevent poorly formatted GitHub release descriptions.
 
 ## v0.7.0 - Installation and Troubleshooting Polish
 
