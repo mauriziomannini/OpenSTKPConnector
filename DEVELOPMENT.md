@@ -193,14 +193,12 @@ Known behavior:
 
 To investigate:
 
-- more precise handling of client reconnects;
 - possible DataRef set reduction after more real-world tests.
 
 ## Suggested Roadmap
 
 1. Keep `v0.7.0` stable as the current public beta baseline.
 2. Use `v0.8-dev` to document and expand the compatibility matrix.
-3. Improve client reconnect handling if real tests show issues.
-4. Refine DataRef send policy after more real-world flights.
-5. Add configurable logging only if diagnostics become too noisy.
-6. Keep release packaging reproducible.
+3. Refine DataRef send policy after more real-world flights.
+4. Add configurable logging only if diagnostics become too noisy.
+5. Keep release packaging reproducible.

@@ -5,6 +5,7 @@
 #include <cerrno>
 #include <cstring>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -16,6 +17,7 @@
 namespace {
 constexpr std::size_t kMaxClients = 8;
 constexpr std::size_t kMaxInputBufferBytes = 64 * 1024;
+constexpr int kSocketOptionEnabled = 1;
 
 bool startsWith(const std::string& value, const char* prefix) {
     return value.rfind(prefix, 0) == 0;
@@ -24,6 +26,13 @@ bool startsWith(const std::string& value, const char* prefix) {
 std::string disconnectReason(const std::string& reason) {
     if (!reason.empty()) return reason;
     return "unknown";
+}
+
+void setSocketOption(int fd, int level, int option, const char* option_name) {
+    int enabled = kSocketOptionEnabled;
+    if (::setsockopt(fd, level, option, &enabled, sizeof(enabled)) < 0) {
+        ostkp::log(std::string("setsockopt(") + option_name + ") failed: " + std::strerror(errno));
+    }
 }
 }
 
@@ -56,7 +65,7 @@ bool TcpServer::start() {
         return false;
     }
 
-    if (::listen(server_fd_, 4) < 0) {
+    if (::listen(server_fd_, static_cast<int>(kMaxClients)) < 0) {
         log("listen() failed: " + std::string(std::strerror(errno)));
         ::close(server_fd_);
         server_fd_ = -1;
@@ -97,9 +106,10 @@ void TcpServer::acceptLoop() {
         const int client_id = next_client_id_++;
 
 #ifdef SO_NOSIGPIPE
-        int yes = 1;
-        setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &yes, sizeof(yes));
+        setSocketOption(client, SOL_SOCKET, SO_NOSIGPIPE, "SO_NOSIGPIPE");
 #endif
+        setSocketOption(client, SOL_SOCKET, SO_KEEPALIVE, "SO_KEEPALIVE");
+        setSocketOption(client, IPPROTO_TCP, TCP_NODELAY, "TCP_NODELAY");
 
         if (!sendAll(client, buildProtocolGreeting())) {
             ::close(client);

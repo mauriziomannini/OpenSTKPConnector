@@ -45,8 +45,10 @@ Responsibilities:
 - read client input opportunistically without blocking the flight loop;
 - remove disconnected clients;
 - tolerate closed sockets and avoid `SIGPIPE` crashes.
+- enable keepalive and disable Nagle delays for accepted clients.
 
 The server keeps a small client list with numeric ids for readable logging.
+It listens with a backlog matching the internal client limit.
 
 ### Protocol
 
