@@ -9,6 +9,7 @@
 - Added a manual test plan for reconnect and final pre-`v1.0` full-flight validation.
 - Documented successful SimToolkitPro reconnect validation while X-Plane remained running.
 - Added a manual test plan for additional aircraft validation before `v1.0`.
+- Documented successful Rosetta `x86_64` reconnect validation and clarified remaining physical Intel Mac validation.
 
 ## v0.8.0 - Release Hardening and Compatibility Checks
 

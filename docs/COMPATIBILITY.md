@@ -9,8 +9,8 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 | X-Plane 12 on Apple Silicon, native `arm64` mode | Validated | Plugin loads and SimToolkitPro tracks the aircraft. |
 | macOS Universal Binary | Validated | Release builds include both `arm64` and `x86_64` slices. |
 | SimToolkitPro connection | Validated | SimToolkitPro connects to `127.0.0.1:51303`. |
-| Intel Mac, native `x86_64` mode | Needs testing | The binary contains the `x86_64` slice, but real Intel Mac testing is still needed. |
-| X-Plane 12 under Rosetta | Needs testing | Expected to work through the Universal Binary, but full OpenSTKPConnector validation is still needed. |
+| X-Plane 12 under Rosetta | Validated | Verified with X-Plane running as Intel 64-bit and loading the `x86_64` slice of the Universal Binary. |
+| Intel Mac, native `x86_64` mode | Expected, needs physical Intel Mac validation | Rosetta validation confirms the `x86_64` plugin slice works, but real Intel Mac hardware testing is still needed. |
 
 ## Aircraft Validation
 
@@ -35,7 +35,6 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 ## Testing Priorities
 
 - Intel Mac validation.
-- X-Plane 12 under Rosetta with OpenSTKPConnector.
 - Additional default and third-party aircraft.
 - Longer flights with cruise, descent, landing report, and screenshots.
 
@@ -55,8 +54,7 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 
 ### Required Before v1.0
 
-- At least one Intel Mac validation report, or a clearly documented reason why Intel validation remains community-provided.
-- At least one X-Plane 12 Rosetta validation report using OpenSTKPConnector, or a clearly documented reason why Rosetta validation remains community-provided.
+- At least one Intel Mac validation report, or a clearly documented reason why physical Intel validation remains community-provided.
 - At least one additional aircraft validation beyond the current LevelUp 737-800NG and Laminar C172 tests, following [`TEST_PLAN.md`](TEST_PLAN.md).
 - One final full-flight test with the latest pre-`v1.0` build, following [`TEST_PLAN.md`](TEST_PLAN.md).
 

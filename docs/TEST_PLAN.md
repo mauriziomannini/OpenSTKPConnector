@@ -95,6 +95,15 @@ Result: pass
 Notes: SimToolkitPro was closed and reopened while X-Plane remained running. X-Plane Log.txt showed client #1 disconnecting with Connection reset by peer, then client #2 connecting, receiving the protocol greeting, and sending 35 subscriptions.
 ```
 
+```text
+Date: 2026-07-05
+OpenSTKPConnector version: v0.9-dev
+X-Plane mode: Rosetta / Intel 64-bit
+Aircraft: Laminar Cessna C172
+Result: pass
+Notes: X-Plane Log.txt identified the simulator as Intel 64-bit. OpenSTKPConnector loaded successfully, SimToolkitPro reconnected after restart, and the new client received the protocol greeting and subscriptions.
+```
+
 ## Full-Flight Pre-v1.0 Test
 
 Goal: verify that the latest pre-`v1.0` build still records a complete flight successfully.
