@@ -12,6 +12,7 @@
 - Added generated Markdown release notes to prevent poorly formatted GitHub release descriptions.
 - Hardened accepted TCP client sockets with keepalive and no-delay options.
 - Added a lightweight protocol/DataRef consistency check script.
+- Added a single local release readiness check script.
 
 ## v0.7.0 - Installation and Troubleshooting Polish
 

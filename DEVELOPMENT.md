@@ -117,6 +117,14 @@ gh release create v0.x.y \
 
 ## Validation Scripts
 
+Run the full local readiness check before tagging or publishing a release:
+
+```bash
+scripts/check_release_ready.sh
+```
+
+The script builds the Universal plugin, verifies both build and `dist` binaries with `lipo`, checks Bash script syntax, runs the protocol/DataRef consistency check, and executes `git diff --check`.
+
 Check that the protocol greeting does not advertise DataRefs missing from the runtime reader:
 
 ```bash
