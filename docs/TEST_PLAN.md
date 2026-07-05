@@ -106,3 +106,50 @@ Minimum success criteria:
 - Landing report is saved.
 - Screenshots are associated when taken by SimToolkitPro.
 - Known manual flight ending behavior still matches the original connector.
+
+## Additional Aircraft Validation Test
+
+Goal: validate OpenSTKPConnector with at least one aircraft beyond the already tested LevelUp 737-800NG and Laminar Cessna C172.
+
+### Aircraft Requirements
+
+- Use an aircraft not already listed as validated in [`COMPATIBILITY.md`](COMPATIBILITY.md).
+- Prefer a third-party aircraft with custom systems, if available.
+- A default Laminar aircraft is acceptable if no third-party aircraft is available.
+
+### Minimum Test Steps
+
+1. Install the latest OpenSTKPConnector development or release build.
+2. Start X-Plane 12 and load the selected aircraft.
+3. Start SimToolkitPro and connect it to X-Plane.
+4. Confirm the aircraft appears on the SimToolkitPro live map.
+5. Fly at least a short route or traffic pattern.
+6. Land and let SimToolkitPro save the landing report, if performing a complete flight.
+7. End the flight in SimToolkitPro using the same manual flow documented for the original connector behavior.
+
+### Success Criteria
+
+- SimToolkitPro connects to OpenSTKPConnector.
+- Aircraft appears on the SimToolkitPro live map.
+- Flight tracking is saved.
+- Landing report is saved for complete flights.
+- No new OpenSTKPConnector errors appear in `X-Plane 12/Log.txt`.
+
+### Result Template
+
+```text
+Date:
+OpenSTKPConnector version:
+macOS version:
+Mac model / CPU:
+X-Plane version:
+X-Plane mode: native Apple Silicon / Rosetta / Intel
+SimToolkitPro version:
+Aircraft:
+Route or traffic pattern:
+Complete flight: yes / no
+Landing report saved: yes / no / not applicable
+Screenshots associated: yes / no / not tested
+Result: pass / fail
+Notes:
+```
