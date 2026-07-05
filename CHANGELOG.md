@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased - v0.8-dev
+## v0.8.0 - Release Hardening and Compatibility Checks
 
 ### Changed
 

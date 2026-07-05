@@ -13,7 +13,7 @@ GitHub:
 https://github.com/mauriziomannini/OpenSTKPConnector
 
 Latest release:
-https://github.com/mauriziomannini/OpenSTKPConnector/releases/tag/v0.7.0
+https://github.com/mauriziomannini/OpenSTKPConnector/releases/tag/v0.8.0
 
 Current status:
 - X-Plane 12 native Apple Silicon loads correctly
@@ -56,7 +56,7 @@ The main reason for the project is Apple Silicon compatibility. The original Sim
 
 Current release:
 
-https://github.com/mauriziomannini/OpenSTKPConnector/releases/tag/v0.7.0
+https://github.com/mauriziomannini/OpenSTKPConnector/releases/tag/v0.8.0
 
 Current status:
 
