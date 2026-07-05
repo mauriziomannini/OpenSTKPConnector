@@ -7,6 +7,8 @@
 - Opened the next development cycle after `v0.7.0`.
 - Added a compatibility validation matrix for supported platforms, tested aircraft, and known SimToolkitPro behaviors.
 - Updated community announcement release links to the latest public beta.
+- Added release packaging guards to prevent version mismatch between release ZIP names and the plugin log version.
+- Converted remaining CMake fatal error messages to English.
 
 ## v0.7.0 - Installation and Troubleshooting Polish
 

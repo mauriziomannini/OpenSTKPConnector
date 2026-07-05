@@ -88,11 +88,22 @@ scripts/package_release.sh v0.x.y
 
 The script:
 
+- requires a release version in `vX.Y.Z` format;
+- verifies that `src/plugin.cpp` contains the same `kPluginVersion` before packaging;
 - configures and builds `build-universal`;
 - verifies that `mac.xpl` contains both `x86_64` and `arm64`;
 - creates `release/OpenSTKPConnector-<version>-mac-universal/`;
 - creates `release/OpenSTKPConnector-<version>-mac-universal.zip`;
 - prints the ZIP SHA256.
+
+Before creating a release package, update:
+
+- `src/plugin.cpp`
+- `README.md`
+- `DEVELOPMENT.md`
+- `CHANGELOG.md`
+
+from the development version, for example `v0.8-dev`, to the final release version, for example `v0.8.0`.
 
 ## Port Test
 

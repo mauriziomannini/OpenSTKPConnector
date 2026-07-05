@@ -7,7 +7,14 @@ if [[ $# -ne 1 ]]; then
     exit 1
 fi
 
-VERSION="$1"
+RAW_VERSION="$1"
+
+if [[ ! "${RAW_VERSION}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Error: version must use the vX.Y.Z format, for example v0.8.0."
+    exit 1
+fi
+
+VERSION="${RAW_VERSION}"
 VERSION="${VERSION#v}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,6 +24,20 @@ RELEASE_NAME="OpenSTKPConnector-v${VERSION}-mac-universal"
 RELEASE_DIR="${ROOT_DIR}/release/${RELEASE_NAME}"
 ZIP_PATH="${ROOT_DIR}/release/${RELEASE_NAME}.zip"
 PLUGIN_PATH="${BUILD_DIR}/mac.xpl"
+PLUGIN_SOURCE_PATH="${ROOT_DIR}/src/plugin.cpp"
+EXPECTED_PLUGIN_VERSION="v${VERSION}"
+PLUGIN_VERSION="$(sed -nE 's/.*kPluginVersion = "([^"]+)".*/\1/p' "${PLUGIN_SOURCE_PATH}")"
+
+if [[ -z "${PLUGIN_VERSION}" ]]; then
+    echo "Error: could not find kPluginVersion in ${PLUGIN_SOURCE_PATH}."
+    exit 1
+fi
+
+if [[ "${PLUGIN_VERSION}" != "${EXPECTED_PLUGIN_VERSION}" ]]; then
+    echo "Error: package version ${EXPECTED_PLUGIN_VERSION} does not match kPluginVersion ${PLUGIN_VERSION}."
+    echo "Update src/plugin.cpp before creating a release package."
+    exit 1
+fi
 
 if [[ -z "${XPLANE_SDK:-}" ]]; then
     DEFAULT_XPLANE_SDK="${HOME}/Development/XPSDK"

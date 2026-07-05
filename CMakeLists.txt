@@ -6,11 +6,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(NOT APPLE)
-    message(FATAL_ERROR "Questo skeleton è configurato per macOS/X-Plane.")
+    message(FATAL_ERROR "This project is configured for macOS/X-Plane only.")
 endif()
 
 if(NOT DEFINED ENV{XPLANE_SDK})
-    message(FATAL_ERROR "Imposta XPLANE_SDK, es: export XPLANE_SDK=$HOME/Development/XPSDK")
+    message(FATAL_ERROR "Set XPLANE_SDK, for example: export XPLANE_SDK=$HOME/Development/XPSDK")
 endif()
 
 set(XPLANE_SDK "$ENV{XPLANE_SDK}")
