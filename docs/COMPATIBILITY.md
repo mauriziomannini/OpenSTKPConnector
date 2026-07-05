@@ -38,3 +38,32 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 - Additional default and third-party aircraft.
 - Longer flights with cruise, descent, landing report, and screenshots.
 - Reconnect behavior when SimToolkitPro is restarted while X-Plane remains open.
+
+## v1.0 Readiness Checklist
+
+### Already Validated
+
+- Native Apple Silicon X-Plane 12 plugin loading.
+- SimToolkitPro connection on `127.0.0.1:51303`.
+- Aircraft tracking on the SimToolkitPro live map.
+- Complete flight log recording.
+- Landing report saving.
+- Screenshot association.
+- Universal macOS build output with `arm64` and `x86_64` slices.
+- Release packaging with SHA256 and Markdown release notes.
+- Local release readiness script.
+
+### Required Before v1.0
+
+- At least one Intel Mac validation report, or a clearly documented reason why Intel validation remains community-provided.
+- At least one X-Plane 12 Rosetta validation report using OpenSTKPConnector, or a clearly documented reason why Rosetta validation remains community-provided.
+- At least one additional aircraft validation beyond the current LevelUp 737-800NG and Laminar C172 tests.
+- One reconnect test where SimToolkitPro is restarted while X-Plane keeps running.
+- One final full-flight test with the latest pre-`v1.0` build.
+
+### Post-v1.0 Nice-To-Have
+
+- Configurable diagnostic verbosity.
+- Further DataRef send-policy tuning if real-world tests show a concrete need.
+- More aircraft-specific validation reports.
+- Optional CI automation for source-only checks.

@@ -5,6 +5,7 @@
 ### Changed
 
 - Opened the next development cycle after `v0.8.0`.
+- Added a `v1.0` readiness checklist to focus final validation work.
 
 ## v0.8.0 - Release Hardening and Compatibility Checks
 

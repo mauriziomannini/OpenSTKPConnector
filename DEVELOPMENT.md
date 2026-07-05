@@ -216,8 +216,8 @@ To investigate:
 ## Suggested Roadmap
 
 1. Keep `v0.8.0` stable as the current public beta baseline.
-2. Use `v0.9-dev` for final validation work before `v1.0`.
-3. Gather community validation for Intel Mac and Rosetta setups.
-4. Refine DataRef send policy only if more real-world flights show a concrete need.
-5. Add configurable logging only if diagnostics become too noisy.
-6. Keep release packaging reproducible.
+2. Use `v0.9-dev` for the final validation work listed in [`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md).
+3. Gather Intel Mac and Rosetta validation, or document them as community-provided before `v1.0`.
+4. Run at least one reconnect test with SimToolkitPro restarted while X-Plane remains open.
+5. Run one final full-flight test with the latest pre-`v1.0` build.
+6. Keep DataRef tuning and configurable logging as post-`v1.0` work unless real tests show a concrete blocker.
