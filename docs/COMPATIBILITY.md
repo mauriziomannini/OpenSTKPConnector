@@ -28,6 +28,7 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 | Flight tracking and log saving | Validated | Verified during complete flights. |
 | Landing report saving | Validated | Verified after touchdown tests and complete flights. |
 | Screenshot association | Validated | Verified with SimToolkitPro flight logs. |
+| SimToolkitPro reconnect while X-Plane remains open | Validated | Verified by closing and reopening SimToolkitPro during an active X-Plane session; a new client received the protocol greeting and subscriptions. |
 | SimToolkitPro startup update warning | Known behavior | SimToolkitPro may show this before X-Plane starts because it validates the official plugin package on disk. Tracking can still work. |
 | Manual flight ending after closing X-Plane | Matches original connector | The original STKPConnector shows the same behavior; end the flight manually from the SimToolkitPro recorder. |
 
@@ -37,7 +38,6 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 - X-Plane 12 under Rosetta with OpenSTKPConnector.
 - Additional default and third-party aircraft.
 - Longer flights with cruise, descent, landing report, and screenshots.
-- Reconnect behavior when SimToolkitPro is restarted while X-Plane remains open.
 
 ## v1.0 Readiness Checklist
 
@@ -58,7 +58,6 @@ This document tracks what has been validated with OpenSTKPConnector and what sti
 - At least one Intel Mac validation report, or a clearly documented reason why Intel validation remains community-provided.
 - At least one X-Plane 12 Rosetta validation report using OpenSTKPConnector, or a clearly documented reason why Rosetta validation remains community-provided.
 - At least one additional aircraft validation beyond the current LevelUp 737-800NG and Laminar C172 tests.
-- One reconnect test where SimToolkitPro is restarted while X-Plane keeps running, following [`TEST_PLAN.md`](TEST_PLAN.md).
 - One final full-flight test with the latest pre-`v1.0` build, following [`TEST_PLAN.md`](TEST_PLAN.md).
 
 ### Post-v1.0 Nice-To-Have

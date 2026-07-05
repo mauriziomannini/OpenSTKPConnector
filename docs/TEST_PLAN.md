@@ -6,6 +6,8 @@ This document defines manual validation steps that cannot be fully covered by lo
 
 Goal: verify that SimToolkitPro can reconnect to OpenSTKPConnector while X-Plane remains running.
 
+Status: validated on `v0.9-dev` during an active X-Plane session. The X-Plane log showed `client #1` disconnecting after SimToolkitPro was closed and `client #2` connecting, receiving the protocol greeting, and sending subscriptions after SimToolkitPro was reopened.
+
 ### Prerequisites
 
 - X-Plane 12 is running.
@@ -80,6 +82,17 @@ Aircraft:
 Route or location:
 Result: pass / fail
 Notes:
+```
+
+### Validated Result
+
+```text
+Date: 2026-07-05
+OpenSTKPConnector version: v0.9-dev
+X-Plane mode: native Apple Silicon
+Aircraft: Laminar Cessna C172
+Result: pass
+Notes: SimToolkitPro was closed and reopened while X-Plane remained running. X-Plane Log.txt showed client #1 disconnecting with Connection reset by peer, then client #2 connecting, receiving the protocol greeting, and sending 35 subscriptions.
 ```
 
 ## Full-Flight Pre-v1.0 Test
