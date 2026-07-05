@@ -15,7 +15,7 @@ This project recreates the connector behavior from scratch:
 
 ## Current Status
 
-Current internal version: `v0.8.0`.
+Current internal version: `v0.9-dev`.
 
 OpenSTKPConnector is currently a public beta / community preview. It is not affiliated with, endorsed by, or supported by SimToolkitPro.
 
@@ -132,7 +132,7 @@ If you prefer, you can replace the whole `stkpconnector` folder with the one fro
 When X-Plane starts, `X-Plane 12/Log.txt` should contain lines similar to:
 
 ```text
-[OpenSTKPConnector] starting v0.8.0
+[OpenSTKPConnector] starting v0.9-dev
 [OpenSTKPConnector] DataRefs initialized: 34; found: 34; missing: 0
 [OpenSTKPConnector] TCP server listening on 127.0.0.1:51303
 [OpenSTKPConnector] client #1 connected; active clients: 1

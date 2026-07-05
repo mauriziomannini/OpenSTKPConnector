@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased - v0.9-dev
+
+### Changed
+
+- Opened the next development cycle after `v0.8.0`.
+
 ## v0.8.0 - Release Hardening and Compatibility Checks
 
 ### Changed
