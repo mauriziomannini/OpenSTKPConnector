@@ -11,6 +11,7 @@
 - Converted remaining CMake fatal error messages to English.
 - Added generated Markdown release notes to prevent poorly formatted GitHub release descriptions.
 - Hardened accepted TCP client sockets with keepalive and no-delay options.
+- Added a lightweight protocol/DataRef consistency check script.
 
 ## v0.7.0 - Installation and Troubleshooting Polish
 

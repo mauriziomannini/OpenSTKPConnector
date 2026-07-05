@@ -115,6 +115,16 @@ gh release create v0.x.y \
   --notes-file release/OpenSTKPConnector-v0.x.y-release-notes.md
 ```
 
+## Validation Scripts
+
+Check that the protocol greeting does not advertise DataRefs missing from the runtime reader:
+
+```bash
+scripts/check_protocol_datarefs.sh
+```
+
+The script allows the known GoldenFlight duplicate subscription for `sim/aircraft/parts/acf_gear_deploy`, while still requiring the DataRef to be read only once at runtime.
+
 ## Port Test
 
 With X-Plane running:
